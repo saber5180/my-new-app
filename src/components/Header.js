@@ -3,14 +3,17 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { FiMenu, FiX, FiChevronDown } from "react-icons/fi"; // Added chevron for dropdown
 import { useNavigate } from 'react-router-dom';
+
 const Header = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isListboxOpen, setIsListboxOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState(null);
   const listboxRef = useRef(null);
+  const navigate = useNavigate();
 
   const navItems = [
+    { name: "Accueil", path: "/" },
     { name: "Acheter", path: "#" },
     { name: "Louer", path: "/louer" },
     { name: "Estimation", path: "/estimation" },
@@ -21,12 +24,11 @@ const Header = () => {
 
   // 5 page options for the listbox
   const pageOptions = [
-    { name: "Accueil", path: "/" },
-    { name: "Page1", path: "/Main9" },
-    { name: "Page2", path: "/Main8" },
-    { name: "Page3", path: "/Main7" },
-    { name: "Page4", path: "/Main5" },
-    { name: "Page5", path: "/Main1" }
+    { name: "Estimation", path: "/Main9" },
+    { name: "Description du chamber", path: "/Main8" },
+    { name: "Appréciation de la valeur", path: "/Main7" },
+    { name: "Prix&Contacte", path: "/Main5" },
+    { name: "Recherche de Biens Immobiliers à Paris", path: "/Main1" }
   ];
 
   const toggleMobileMenu = () => {
@@ -37,14 +39,19 @@ const Header = () => {
     setIsListboxOpen(!isListboxOpen);
   };
 
-  
-const navigate = useNavigate();
+  const selectPage = (page) => {
+    setSelectedPage(page);
+    setIsListboxOpen(false);
+    navigate(page.path); // Navigate to the selected page
+  };
 
-const selectPage = (page) => {
-  setSelectedPage(page);
-  setIsListboxOpen(false);
-  navigate(page.path); // Navigate to the selected page
-};
+  // Check if current path matches any of the page options
+  useEffect(() => {
+    const currentPageOption = pageOptions.find(page => page.path === location.pathname);
+    if (currentPageOption) {
+      setSelectedPage(currentPageOption);
+    }
+  }, [location.pathname]);
 
   // Close listbox when clicking outside
   useEffect(() => {
@@ -60,6 +67,9 @@ const selectPage = (page) => {
     };
   }, []);
 
+  // Check if the current page is in page options
+  const isPageActive = pageOptions.some(page => page.path === location.pathname);
+
   return (
     <header className="border-b border-transparent relative" style={{background:"#F9FAFB"}}>
       {/* Top Header Section */}
@@ -67,41 +77,6 @@ const selectPage = (page) => {
         {/* Logo */}
         <div className="flex items-center">
           <img src={logo} alt="ImmoXpert" className="h-10" />
-        </div>
-
-        {/* Page Listbox - added between logo and buttons */}
-        <div className="hidden md:block relative" ref={listboxRef}>
-          <button 
-            onClick={toggleListbox}
-            className="flex items-center space-x-1 px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition"
-            aria-haspopup="listbox"
-            aria-expanded={isListboxOpen}
-          >
-            <span>{selectedPage ? selectedPage.name : 'Pages'}</span>
-            <FiChevronDown className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`} />
-          </button>
-          
-          {isListboxOpen && (
-            <ul 
-              className="absolute mt-1 w-40 bg-white shadow-lg rounded-lg py-1 z-50"
-              role="listbox"
-              aria-label="page"
-            >
-              {pageOptions.map((page) => (
-                <li
-                  key={page.name}
-                  role="option"
-                  aria-selected={selectedPage?.name === page.name}
-                  onClick={() => selectPage(page)}
-                  className={`px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${
-                    selectedPage?.name === page.name ? 'bg-gray-50 font-medium' : ''
-                  }`}
-                >
-                  {page.name}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
 
         {/* Desktop Buttons */}
@@ -157,47 +132,57 @@ const selectPage = (page) => {
             )}
           </div>
         ))}
+        
+        {/* Pages navigation item with dropdown */}
+        <div className="relative" ref={listboxRef}>
+          <button 
+            onClick={toggleListbox}
+            className={`text-gray-700 hover:text-primary transition flex items-center space-x-1 ${
+              isPageActive ? "font-bold text-black" : ""
+            }`}
+            aria-haspopup="listbox"
+            aria-expanded={isListboxOpen}
+          >
+            <span>{selectedPage ? selectedPage.name : 'Pages'}</span>
+            <FiChevronDown className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`} size={16} />
+          </button>
+          
+          {isPageActive && (
+            <div 
+              className="absolute left-0 right-0 bottom-[-2px] h-[2px] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500" 
+              style={{ maskImage: "linear-gradient(to right, transparent, white 20%, white 80%, transparent)" }}
+            />
+          )}
+          
+          {isListboxOpen && (
+            <ul 
+              className="absolute mt-1 w-40 bg-white shadow-lg rounded-lg py-1 z-50"
+              role="listbox"
+              aria-label="page"
+            >
+              {pageOptions.map((page) => (
+                <li
+                  key={page.name}
+                  role="option"
+                  aria-selected={selectedPage?.name === page.name}
+                  onClick={() => selectPage(page)}
+                  className={`px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${
+                    selectedPage?.name === page.name ? 'bg-gray-50 font-medium' : ''
+                  }`}
+                >
+                  {page.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </nav>
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg z-50">
           <nav className="flex flex-col space-y-4 p-4">
-            {/* Page Listbox for Mobile */}
-            <div className="relative">
-              <button 
-                onClick={toggleListbox}
-                className="flex items-center justify-between w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-700"
-                aria-haspopup="listbox"
-                aria-expanded={isListboxOpen}
-              >
-                <span>{selectedPage ? selectedPage.name : 'Pages'}</span>
-                <FiChevronDown className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {isListboxOpen && (
-                <ul 
-                  className="mt-1 w-full bg-white shadow-lg rounded-lg py-1 z-50"
-                  role="listbox"
-                  aria-label="page"
-                >
-                  {pageOptions.map((page) => (
-                    <li
-                      key={page.name}
-                      role="option"
-                      aria-selected={selectedPage?.name === page.name}
-                      onClick={() => selectPage(page)}
-                      className={`px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${
-                        selectedPage?.name === page.name ? 'bg-gray-50 font-medium' : ''
-                      }`}
-                    >
-                      {page.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            
+            {/* Navigation Items */}
             {navItems.map((item, index) => (
               <Link
                 key={index}
@@ -210,6 +195,46 @@ const selectPage = (page) => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Page Listbox for Mobile - Updated to match nav style */}
+            <div className="relative">
+              <button 
+                onClick={toggleListbox}
+                className={`flex items-center justify-between w-full text-gray-700 hover:text-primary transition ${
+                  isPageActive ? "font-bold text-black" : ""
+                }`}
+                aria-haspopup="listbox"
+                aria-expanded={isListboxOpen}
+              >
+                <span>{selectedPage ? selectedPage.name : 'Pages'}</span>
+                <FiChevronDown className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`} size={16} />
+              </button>
+              
+              {isListboxOpen && (
+                <ul 
+                  className="mt-2 ml-4 w-full bg-white py-1 z-50 space-y-2"
+                  role="listbox"
+                  aria-label="page"
+                >
+                  {pageOptions.map((page) => (
+                    <li
+                      key={page.name}
+                      role="option"
+                      aria-selected={selectedPage?.name === page.name}
+                      onClick={() => {
+                        selectPage(page);
+                        toggleMobileMenu();
+                      }}
+                      className={`cursor-pointer transition ${
+                        selectedPage?.name === page.name ? 'font-medium' : ''
+                      }`}
+                    >
+                      {page.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             
             {/* Mobile Buttons */}
             <div className="flex flex-col space-y-3 mt-4">
