@@ -6,6 +6,7 @@ import PropertyList from './Page/PropertyList';
 import Footer from './components/Footer';
 import { properties } from './data/properties';
 import LouerPage from './Page/Louer';
+import Home from './Page/Home';
 import TrouveAgent from './Page/TrouveAgent';
 import VoirLagence from './Page/VoirLagence';
 import Main1 from './components/ComponedNonLiee/Main1';
@@ -13,6 +14,7 @@ import Main5 from './components/ComponedNonLiee/Main5';
 import Main7 from './components/ComponedNonLiee/Main7';
 import Main8 from './components/ComponedNonLiee/Main8';
 import Main9 from './components/ComponedNonLiee/Main9';
+
 
 function App() {
   return (
@@ -43,6 +45,7 @@ function App() {
             <Route path="/Main7" element={<Main7 />} />
             <Route path="/Main8" element={<Main8 />} />
             <Route path="/Main9" element={<Main9 />} />
+            <Route path="/" element={<Home />} />
           </Routes>
         </main>
         
