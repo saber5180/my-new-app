@@ -143,7 +143,7 @@ const Header = () => {
             aria-haspopup="listbox"
             aria-expanded={isListboxOpen}
           >
-            <span>{selectedPage ? selectedPage.name : 'Pages'}</span>
+            <span>Pages</span>
             <FiChevronDown className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`} size={16} />
           </button>
           
