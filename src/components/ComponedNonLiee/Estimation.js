@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-function Main7() {
+function Estimation() {
   const [propertyType, setPropertyType] = useState('house');
-
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8" style={{background:"#F9FAFB"}}>
       <div className="max-w-6xl mx-auto">
@@ -61,7 +63,7 @@ function Main7() {
               </label>
             </div>
 
-            <button className="w-full bg-emerald-500 text-white py-3 rounded-lg hover:bg-emerald-600 transition-colors" style={{background:"#44CE9B"}}>
+            <button onClick={() => navigate("/EstimationRechercher")} className="w-full bg-emerald-500 text-white py-3 rounded-lg hover:bg-emerald-600 transition-colors" style={{background:"#44CE9B"}}>
               Rechercher
             </button>
           </div>
@@ -111,4 +113,4 @@ function Main7() {
   );
 }
 
-export default Main7;
+export default Estimation;

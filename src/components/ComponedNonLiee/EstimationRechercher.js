@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Main8() {
+function EstimationRechercher() {
   const [roomCount, setRoomCount] = useState(2);
   const [apartmentSize, setApartmentSize] = useState('');
   const [intention, setIntention] = useState(null);
+  const navigate = useNavigate();
 
   const roomNumbers = [1, 2, 3, 4, 5, '6+'];
 
@@ -72,9 +74,18 @@ function Main8() {
             ))}
           </div>
         </div>
+
+        <div className="flex justify-end mt-8">
+          <button 
+            onClick={() => navigate("/PrixEstime")} 
+            className="px-8 py-3 bg-purple-500 text-white font-medium rounded-lg hover:bg-purple-600 transition-colors"
+          >
+            Suivant
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Main8;
+export default EstimationRechercher;

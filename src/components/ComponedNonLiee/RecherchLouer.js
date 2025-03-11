@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Home, Search, Heart, User, ChevronLeft,ChevronDown , ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Main1 = () => {
+const RecherchLouer = () => {
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -371,4 +371,4 @@ const renderTags = (tags) => {
   );
 };
 
-export default Main1;
+export default RecherchLouer;

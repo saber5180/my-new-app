@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiHome, FiCheckSquare, FiSquare, FiSearch, FiMapPin, FiDollarSign } from 'react-icons/fi';
 
 const Louer = () => {
-  const [propertyType, setPropertyType] = useState('maison');
+
+  const navigate = useNavigate();
+    const [propertyType, setPropertyType] = useState('maison');
   
   const cities = [
     { name: 'Paris', url: '#' },
@@ -140,7 +142,7 @@ const Louer = () => {
                     </div>
                   </div>
                   
-                  <button className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 ease-in-out flex items-center justify-center font-medium">
+                  <button onClick={() => navigate("/RecherchLouer")} className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 ease-in-out flex items-center justify-center font-medium">
                     <FiSearch className="mr-2 h-5 w-5" />
                     Rechercher
                   </button>

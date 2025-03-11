@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Main9 = () => {
+const PrixEstime = () => {
   const [duration, setDuration] = useState(25);
 
   return (
@@ -84,4 +84,4 @@ const Main9 = () => {
   );
 };
 
-export default Main9;
+export default PrixEstime;
