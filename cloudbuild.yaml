@@ -9,7 +9,6 @@ steps:
       - --only=hosting
 
 options:
-    machineType: 'E2_HIGHCPU_8'
 
 logsBucket: 'gs://immoxperts-devops'
 timeout: '1600s'
