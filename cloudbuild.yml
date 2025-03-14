@@ -1,0 +1,14 @@
+steps:
+  - name: "gcr.io/cloud-builders/npm:node-16.18.0"
+    args: ["install"]
+  - name: "gcr.io/cloud-builders/npm:node-16.18.0"
+    args: ["run", "build"]
+  - name: 'gcr.io/immoxperts/firebase'
+    args:
+      - deploy
+      - --only=hosting
+
+options:
+    machineType: 'E2_HIGHCPU_8'
+
+  
