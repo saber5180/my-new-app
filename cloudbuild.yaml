@@ -3,15 +3,15 @@ steps:
     args: ["install"]
   - name: "gcr.io/cloud-builders/npm:node-16.18.0"
     args: ["run", "build"]
-  - name: 'gcr.io/immoxperts/firebase'
+  - name: 'gcr.io/cloud-builders/firebase'
     args:
       - deploy
       - --only=hosting
+      - --project=$_PROJECT_ID
 
 options:
-
-logsBucket: 'gs://immoxperts-devops'
-timeout: '1600s'
+  logsBucket: 'gs://immoxperts-devops'
+  timeout: '1600s'
 
 
   
