@@ -9,9 +9,8 @@ steps:
       - --only=hosting
       - --project=$_PROJECT_ID
 
-options:
-  logsBucket: 'gs://immoxperts-devops'
-  timeout: '1600s'
+logsBucket: 'gs://immoxperts-devops'
+timeout: '1600s'
 
 
   
