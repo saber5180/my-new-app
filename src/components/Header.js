@@ -24,11 +24,10 @@ const Header = () => {
 
   // 5 page options for the listbox
   const pageOptions = [
-    { name: "Estimation", path: "/Main9" },
-    { name: "Description du chamber", path: "/Main8" },
-    { name: "Appréciation de la valeur", path: "/Main7" },
+   
+   
     { name: "Prix&Contacte", path: "/Main5" },
-    { name: "Recherche de Biens Immobiliers à Paris", path: "/Main1" }
+    
   ];
 
   const toggleMobileMenu = () => {
@@ -76,7 +75,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          <img src={logo} alt="ImmoXpert" className="h-10" />
+          <img src={logo} alt="ImmoXpert" className="h-10" onClick={() => navigate("/")}/>
         </div>
 
         {/* Desktop Buttons */}

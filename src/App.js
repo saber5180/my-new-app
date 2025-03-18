@@ -9,11 +9,11 @@ import LouerPage from './Page/Louer';
 import Home from './Page/Home';
 import TrouveAgent from './Page/TrouveAgent';
 import VoirLagence from './Page/VoirLagence';
-import Main1 from './components/ComponedNonLiee/Main1';
+import RecherchLouer from './components/ComponedNonLiee/RecherchLouer';
 import Main5 from './components/ComponedNonLiee/Main5';
-import Main7 from './components/ComponedNonLiee/Main7';
-import Main8 from './components/ComponedNonLiee/Main8';
-import Main9 from './components/ComponedNonLiee/Main9';
+import Estimation from './components/ComponedNonLiee/Estimation';
+import EstimationRechercher from './components/ComponedNonLiee/EstimationRechercher';
+import PrixEstime from './components/ComponedNonLiee/PrixEstime';
 
 
 function App() {
@@ -40,11 +40,11 @@ function App() {
             <Route path="/louer" element={<LouerPage />} />
             <Route path="/TrouverAgent" element={<TrouveAgent />} />
             <Route path="/VoirLagence" element={<VoirLagence />} />
-            <Route path="/Main1" element={<Main1 />} />
+            <Route path="/RecherchLouer" element={<RecherchLouer />} />
             <Route path="/Main5" element={<Main5 />} />
-            <Route path="/Main7" element={<Main7 />} />
-            <Route path="/Main8" element={<Main8 />} />
-            <Route path="/Main9" element={<Main9 />} />
+            <Route path="/estimation" element={<Estimation />} />
+            <Route path="/EstimationRechercher" element={<EstimationRechercher />} />
+            <Route path="/PrixEstime" element={<PrixEstime />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </main>
