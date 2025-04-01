@@ -11,4 +11,36 @@ body {
   body {
     font-family: 'Maven Pro', sans-serif;
   }
-  
+  /* Custom Mapbox Popup Styles */
+.mapboxgl-popup {
+  font-family: 'Courier New', Courier, monospace;
+  z-index: 1000;
+}
+
+.mapboxgl-popup-content {
+  padding: 12px !important;
+  max-height: 400px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.mapboxgl-popup-content h3 {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.mapboxgl-popup-content div div {
+  padding: 4px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Scrollbar personnalisée */
+.mapboxgl-popup-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mapboxgl-popup-content::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 3px;
+}
