@@ -537,7 +537,7 @@ mapRef.current.on('mouseleave', 'your-layer-name', () => {
   const searchMutations = async (addressParts) => {
     try {
       console.log("Searching for:", addressParts);
-      const response = await axios.get("http://localhost:8080/api/mutations/search", {
+      const response = await axios.get("https://immoxperts.apeiron-tech.dev/api/mutations/search", {
         params: { ...addressParts }, // Parameters without accents
       });
   

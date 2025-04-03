@@ -25,7 +25,7 @@ const Map2 = ({ onPropertiesFound }) => {
         voie: (properties.nomVoie || '').toUpperCase()
       });
 
-      const response = await fetch(`http://localhost:8080/api/mutations/search?${params}`);
+      const response = await fetch(`https://immoxperts.apeiron-tech.dev/api/mutations/search?${params}`);
 
       if (!response.ok) {
         const errorText = await response.text();
