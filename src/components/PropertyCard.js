@@ -50,8 +50,8 @@ const PropertyCard = ({ property }) => {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xl font-bold text-indigo-600">{price}€</div>
-          <div className="text-sm text-gray-500">{pricePerSqm}€/m²</div>
+          <div className="text-xl font-bold text-indigo-600">{price}</div>
+          <div className="text-sm text-gray-500">{pricePerSqm}/m²</div>
         </div>
       </div>
 
