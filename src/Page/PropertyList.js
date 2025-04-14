@@ -92,20 +92,18 @@ const PropertyList = () => {
         
         {/* Scrollable property cards container */}
         <div className="overflow-y-auto flex-1 px-2 space-y-2 pb-2">
-          {properties.length > 0 ? (
-            properties.map(property => (
-              <PropertyCard key={property.id} property={property} />
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full text-gray-500 p-4">
-              <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
-              </svg>
-              <p className="text-lg font-medium">Cliquez sur la carte pour voir les biens vendus à cette adresse</p>
-              <p className="text-sm text-center mt-2">Les transactions immobilières récentes seront affichées ici</p>
-            </div>
-          )}
-        </div>
+  {properties.length > 0 ? (
+    properties.map(property => (
+      <PropertyCard key={property.id} property={property} />
+    ))
+  ) : (
+    <div className="flex flex-col items-center justify-center h-full text-gray-500 p-4">
+      <p className="text-lg font-medium text-center">
+        Aucune vente identifiée à cette adresse
+      </p>
+    </div>
+  )}
+</div>
       </div>
       
       {/* Right Section (Map) */}

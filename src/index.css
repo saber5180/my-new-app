@@ -16,31 +16,144 @@ body {
   font-family: 'Courier New', Courier, monospace;
   z-index: 1000;
 }
-
-.mapboxgl-popup-content {
-  padding: 12px !important;
-  max-height: 400px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+/* Base Popup Styles */
+.mapboxgl-popup {
+  z-index: 100;
+  max-width: 320px !important;
 }
 
-.mapboxgl-popup-content h3 {
+/* Style spécifique pour le popup au survol */
+.hover-popup .mapboxgl-popup-content {
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  background: white;
+}
+
+/* En-tête du popup avec adresse et prix */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 15px;
+  color: #333;
+}
+
+.popup-header .price {
+  font-weight: 700;
+  font-size: 16px;
+  color: #5252e8;
+}
+
+/* Type de propriété */
+.property-type {
+  padding: 0 16px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Grille d'informations */
+.property-details {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.property-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.detail-value {
   font-size: 14px;
-  letter-spacing: 0.5px;
-  color: #2d3748;
-  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
 }
 
-.mapboxgl-popup-content div div {
-  padding: 4px 0;
-  border-bottom: 1px solid #e2e8f0;
+/* Prix au m² */
+.price-per-sqm {
+  padding: 6px 16px;
+  font-size: 13px;
+  color: #666;
+  text-align: right;
 }
 
-/* Scrollbar personnalisée */
-.mapboxgl-popup-content::-webkit-scrollbar {
-  width: 6px;
+/* Bouton */
+.popup-button-container {
+  padding: 12px 16px;
+  text-align: center;
 }
 
-.mapboxgl-popup-content::-webkit-scrollbar-thumb {
-  background-color: #cbd5e0;
-  border-radius: 3px;
+.popup-button {
+  width: 100%;
+  background: #5252e8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-button:hover {
+  background: #4040cc;
+}
+
+.popup-button svg {
+  margin-right: 6px;
+}
+
+/* Animation pour l'indicateur de chargement */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Flèche du popup */
+.mapboxgl-popup-tip {
+  border-top-color: white !important;
+  border-bottom-color: white !important;
+}
+
+/* Masquer le bouton de fermeture par défaut */
+.hover-popup .mapboxgl-popup-close-button {
+  display: none;
+}
+/* Style pour l'échelle */
+.mapboxgl-ctrl.mapboxgl-ctrl-scale {
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 2px 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

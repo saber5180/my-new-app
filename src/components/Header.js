@@ -106,10 +106,7 @@ const Header = () => {
       </div>
 
       {/* Gradient Line */}
-      <div 
-        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500" 
-        style={{ maskImage: "linear-gradient(to right, transparent, white 20%, white 80%, transparent)" }}
-      />
+    
 
       {/* Desktop Navigation */}
       <nav className="hidden md:flex space-x-6 justify-center mt-5 mb-3">
@@ -148,8 +145,8 @@ const Header = () => {
           
           {isPageActive && (
             <div 
-              className="absolute left-0 right-0 bottom-[-2px] h-[2px] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500" 
-              style={{ maskImage: "linear-gradient(to right, transparent, white 20%, white 80%, transparent)" }}
+            className="absolute left-0 right-0 h-[3px] bg-gradient-to-r from-purple-500 via-blue-500 to-orange-500" 
+            style={{ maskImage: "linear-gradient(to right, transparent, white 60%, white 40%, transparent)" }}
             />
           )}
           
@@ -176,6 +173,10 @@ const Header = () => {
           )}
         </div>
       </nav>
+      <div 
+        className="absolute left-0 right-0 h-[3px] bg-gradient-to-r from-purple-500 via-blue-500 to-orange-500" 
+        style={{ maskImage: "linear-gradient(to right, transparent, white 60%, white 40%, transparent)" }}
+      />
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
