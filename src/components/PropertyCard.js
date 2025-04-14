@@ -19,7 +19,7 @@ const PropertyCard = ({ property }) => {
       {/* Property Details */}
       <div className="flex items-start justify-between ">
         <div>
-          <h3 className="font-extrabold text-md text-gray-900">{address} - {city}</h3>
+          <h2 className="font-extrabold text-md text-gray-900">{address}</h2>
           <div className="flex items-center text-gray-500 text-sm mt-1">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_406_641)"><path d="M12 11.3333H11V12H12V11.3333Z" fill="black" fill-opacity="0.15"/>
           <path d="M9 6H8V6.66668H9V6Z" fill="black" fill-opacity="0.15"/>
@@ -71,7 +71,7 @@ const PropertyCard = ({ property }) => {
           </defs>
           </svg>
 
-            <span className='px-1'>{surface}m²</span>
+            <span className='px-1'>{surface}</span>
           </div>
         </div>
         <div>
@@ -91,12 +91,7 @@ const PropertyCard = ({ property }) => {
         </div>
       </div>
 
-      {/* Agent Details */}
-      <div className="flex justify-end mt-4">
-        <button className="bg-red-500 text-white px-4 py-2 text-sm rounded-lg font-semibold hover:bg-red-600 transition">
-          Analyser maintenant
-        </button>
-      </div>
+      
     </div>
   );
 };
