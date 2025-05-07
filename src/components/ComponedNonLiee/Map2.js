@@ -119,7 +119,7 @@ const Map2 = ({
     const fetchMutations = async (street, commune) => {
       try {
         const response = await axios.get(
-          'http://localhost:8080/api/mutations/mutations/by-street-and-commune',
+          'https://immoxperts.apeiron-tech.dev/api/mutations/mutations/by-street-and-commune',
           {
             params: {
               street: encodeURIComponent(street),
