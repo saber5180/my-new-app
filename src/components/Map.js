@@ -4,7 +4,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2FiZXI1MTgwIiwiYSI6ImNtOGhqcWs4cTAybnEycXNiaHl6eWgwcjAifQ.8C8bv3cwz9skLXv-y6U3FA';
-mapboxgl.setTelemetryEnabled(false);
 
 const Map = ({ onPropertiesFound }) => {
   const mapContainer = useRef(null);
