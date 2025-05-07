@@ -745,7 +745,7 @@ const Map2 = ({
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:8080/api/mutations/statistics/${currentCity.toLowerCase()}`
+          `https://immoxperts.apeiron-tech.dev/api/mutations/statistics/${currentCity.toLowerCase()}`
         );
         setPropertyStats(response.data);
       } catch (err) {
