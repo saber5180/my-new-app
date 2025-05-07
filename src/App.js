@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
@@ -17,25 +17,30 @@ import PrixEstime from './components/ComponedNonLiee/PrixEstime';
 
 
 function App() {
+  const [searchParams, setSearchParams] = useState({
+    numero: null,
+    nomVoie: null,
+    coordinates: null,
+  });
+
   return (
     <Router>
-      <div className="flex flex-col  " style={{background:"#F9FAFB"}}>
+      <div className="flex flex-col" style={{ background: "#F9FAFB" }}>
         <Header />
-        
         <main className="flex-grow mb-10">
           <Routes>
-            <Route 
-              path="/PrixImmobliers" 
+            <Route
+              path="/PrixImmobliers"
               element={
                 <div className="flex flex-col h-full">
-                  <SearchBar />
-                  <div className="flex-1 container px-4 lg:px-20 pb-4 pt-2 mx-auto">
+                  <SearchBar onSearch={setSearchParams} />
+                  <div className="flex-1 container px-4 lg:px-10 pb-4 pt-2 mx-auto">
                     <div className="flex h-full shadow-lg border border-gray-200 rounded-lg overflow-hidden bg-white">
-                      <PropertyList properties={properties} />
+                      <PropertyList properties={properties} searchParams={searchParams} />
                     </div>
                   </div>
                 </div>
-              } 
+              }
             />
             <Route path="/louer" element={<LouerPage />} />
             <Route path="/TrouverAgent" element={<TrouveAgent />} />
@@ -46,13 +51,11 @@ function App() {
             <Route path="/EstimationRechercher" element={<EstimationRechercher />} />
             <Route path="/PrixEstime" element={<PrixEstime />} />
             <Route path="/" element={<Home />} />
-          </Routes>
+            </Routes>
         </main>
-        
         <Footer />
       </div>
     </Router>
   );
 }
-
 export default App;

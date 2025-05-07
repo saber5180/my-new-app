@@ -17,47 +17,48 @@ body {
   z-index: 1000;
 }
 /* Base Popup Styles */
-.mapboxgl-popup {
-  z-index: 100;
-  max-width: 320px !important;
-}
+
 
 /* Style spécifique pour le popup au survol */
 .hover-popup .mapboxgl-popup-content {
-  padding: 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  border: 1px solid rgba(229, 231, 235, 0.8);
-  background: white;
+  overflow: visible; /* Permet le redimensionnement automatique */
+  width: 500px !important; /* or any value you prefer */
+  max-width: 100%;
+  max-width: none !important;
+  
 }
 
-/* En-tête du popup avec adresse et prix */
 .popup-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  align-items: flex-start;
+  flex-wrap: wrap; /* Allow wrap */
+  gap: 4px; /* Space between lines when wrapped */
 }
 
 .popup-header h3 {
   margin: 0;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   color: #333;
+  flex: 1 1 auto;
+  word-break: break-word; /* Break long words if needed */
+  min-width: 0;
 }
 
 .popup-header .price {
   font-weight: 700;
   font-size: 16px;
   color: #5252e8;
+  white-space: nowrap;
+  margin-left: auto;
 }
+
 
 /* Type de propriété */
 .property-type {
   padding: 0 16px;
-  margin-top: 6px;
+
   font-size: 13px;
   color: #666;
 }
@@ -79,7 +80,7 @@ body {
 .detail-label {
   font-size: 12px;
   color: #888;
-  margin-bottom: 2px;
+  
 }
 
 .detail-value {
@@ -137,8 +138,8 @@ body {
 
 /* Flèche du popup */
 .mapboxgl-popup-tip {
-  border-top-color: white !important;
-  border-bottom-color: white !important;
+  border-top-color: rgb(247, 247, 247) !important;
+  border-bottom-color: rgb(248, 248, 248) !important;
 }
 
 /* Masquer le bouton de fermeture par défaut */
@@ -149,11 +150,30 @@ body {
 .mapboxgl-ctrl.mapboxgl-ctrl-scale {
   border: 2px solid #333;
   border-radius: 4px;
-  padding: 2px 5px;
-  background-color: rgba(255, 255, 255, 0.8);
+
+ 
   font-family: 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: bold;
   color: #333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+/* In your CSS file */
+.suggestion-item {
+  transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+  background-color: #f8f9fa;
+}
+
+.suggestion-address {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.suggestion-context {
+  color: #666;
+  font-size: 0.875rem;
 }

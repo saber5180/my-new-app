@@ -39,7 +39,7 @@ const RangeSlider = () => {
     >
       <div className="h-2 bg-gray-200 rounded-full">
         <div
-          className="absolute h-2 bg-indigo-500 rounded-full"
+          className="absolute h-2 bg-indigo-900 rounded-full"
           style={{ width: `${max - min}%`, left: `${min}%` }}
         ></div>
         <div
@@ -61,11 +61,12 @@ const FilterPopup = ({ isOpen, onClose, onApply }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-6xl p-6 relative max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Filtres</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+    <div className="fixed inset-0 bg-white md:bg-black md:bg-opacity-50 flex items-start md:items-center justify-center z-50">
+      <div className="bg-white w-full max-w-6xl relative h-screen md:h-auto md:max-h-[90vh] md:rounded-3xl overflow-y-auto px-10 py-4">
+        {/* Header */}
+        <div className="flex justify-between items-center p-4 border-b border-gray-200">
+          <h2 className="text-2xl font-bold">Filtres</h2>
+          <button onClick={onClose} className="text-black hover:text-gray-700">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -83,83 +84,151 @@ const FilterPopup = ({ isOpen, onClose, onApply }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Date de vente */}
-          <div>
-            <h3 className="font-medium mb-2">Date de vente</h3>
-            <p className="text-sm text-gray-500 mb-2">Toutes les valeurs</p>
-            <RangeSlider />
-            <div className="flex gap-2 mt-4">
-              <button className="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-                Depuis 2014
-              </button>
-              <button className="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-                Depuis 2023
-              </button>
-              <button className="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
-                1er sem 2024
-              </button>
-            </div>
-          </div>
-
-          {/* Prix de vente */}
-          <div>
-            <h3 className="font-medium mb-2">Prix de vente</h3>
-            <p className="text-sm text-gray-500 mb-2">Toutes les valeurs</p>
-            <RangeSlider />
-          </div>
-
-          {/* Prix au m² */}
-          <div>
-            <h3 className="font-medium mb-2">Prix au m²</h3>
-            <p className="text-sm text-gray-500 mb-2">Toutes les valeurs</p>
-            <RangeSlider />
-          </div>
-
-          {/* Type de bien */}
-          <div>
-            <h3 className="font-medium mb-4">Type de bien</h3>
-            <div className="space-y-3">
-              {["Maison", "Appartement", "Local Commercial/Industriel", "Terrain", "Biens multiples"].map((type) => (
-                <div className="flex items-center" key={type}>
-                  <input type="checkbox" className="w-4 h-4 accent-indigo-500" defaultChecked />
-                  <label className="ml-2">{type}</label>
+        {/* Content */}
+        <div className="p-4">
+          <div className="flex flex-col md:flex-row">
+            {/* Left Column */}
+            <div className="md:w-1/2 md:border-r md:pr-8 pb-6">
+              {/* Type de bien */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold mb-4">Type de bien</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="maison"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                      defaultChecked
+                    />
+                    <label htmlFor="maison" className="ml-2 text-lg">Maison</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="terrain"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                    />
+                    <label htmlFor="terrain" className="ml-2 text-lg">Terrain</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="appartement"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                    />
+                    <label htmlFor="appartement" className="ml-2 text-lg">Appartement</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="biens-multiples"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                    />
+                    <label htmlFor="biens-multiples" className="ml-2 text-lg">Biens multiples</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="local commercials"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                    />
+                    <label htmlFor="biens-multiples" className="ml-2 text-lg">local commercial</label>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-          {/* Nombre de pièces */}
-          <div>
-            <h3 className="font-medium mb-4">Nombre de pièces</h3>
-            <div className="space-y-3">
-              {["2 pièces", "3 pièces", "4 pièces", "5 pièces et +"].map((piece) => (
-                <div className="flex items-center" key={piece}>
-                  <input type="checkbox" className="w-4 h-4 accent-indigo-500" defaultChecked />
-                  <label className="ml-2">{piece}</label>
+              {/* Nombre de pièces */}
+              <div>
+                <h3 className="text-xl font-bold mb-4">Nombre de pièces</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="studio"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                      defaultChecked
+                    />
+                    <label htmlFor="studio" className="ml-2 text-lg">Studio</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="2pieces"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                    />
+                    <label htmlFor="2pieces" className="ml-2 text-lg">2 pièces</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="3pieces"
+                      className="w-5 h-5 rounded accent-indigo-900"
+                    />
+                    <label htmlFor="3pieces" className="ml-2 text-lg">3 pièces</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="4pieces"
+                      className="w-5 h-5 rounded accent-indigo-700"
+                    />
+                    <label htmlFor="4pieces" className="ml-2 text-lg">4 pièces</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="5pieces"
+                      className="w-5 h-5 rounded accent-indigo-700"
+                    />
+                    <label htmlFor="5pieces" className="ml-2 text-lg">5 pièces et +</label>
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
 
-          {/* Surface */}
-          <div>
-            <h3 className="font-medium mb-2">Surface</h3>
-            <p className="text-sm text-gray-500 mb-2">Toutes les valeurs</p>
-            <RangeSlider />
+            {/* Right Column */}
+            <div className="md:w-1/2 md:pl-8 p-10">
+              {/* Prix */}
+              <div className="mb-4 space-y-2">
+                <h3 className="text-xl font-bold ">Prix</h3>
+                <p className="text-lg">À partir de <span className="font-bold">100 000 €</span></p>
+                <RangeSlider />
+              </div>
+
+              {/* Surface */}
+              <div className="mb-4 space-y-2">
+                <h3 className="text-xl font-bold">Surface</h3>
+                <p className="text-lg text-gray-600">Toutes les valeurs</p>
+                <RangeSlider />
+              </div>
+
+               {/* Prix */}
+               <div className="mb-4 space-y-2">
+                <h3 className="text-xl font-bold ">Prix m²</h3>
+                <p className="text-lg">À partir de <span className="font-bold"></span></p>
+                <RangeSlider />
+              </div>
+               {/* Prix */}
+               <div className=" mb-4 space-y-2">
+                <h3 className="text-xl font-bold">Date de vente</h3>
+                <p className="text-lg">À partir de <span className="font-bold"></span></p>
+                <RangeSlider />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 mt-8">
+        {/* Footer with buttons */}
+        <div className="flex justify-end gap-4 p-4 border-t border-gray-200">
           <button
             onClick={onClose}
-            className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            className="px-8 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-lg"
           >
             Annuler
           </button>
           <button
             onClick={onApply}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="px-8 py-3 bg-indigo-900 text-white rounded-lg hover:bg-indigo-900 text-lg"
           >
             Appliquer
           </button>
@@ -169,4 +238,5 @@ const FilterPopup = ({ isOpen, onClose, onApply }) => {
   );
 };
 
+// Note: This component assumes you're using Tailwind CSS
 export default FilterPopup;
