@@ -6,12 +6,12 @@ import axios from 'axios';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2FiZXI1MTgwIiwiYSI6ImNtOGhqcWs4cTAybnEycXNiaHl6eWgwcjAifQ.8C8bv3cwz9skLXv-y6U3FA';
 
-const Map2 = ({ 
-  onMapMove, 
+const Map2 = ({
+  onMapMove,
   onPropertySelect,
   onPropertiesFound,  // Add this
   onAddressFound,     // Add this
-  searchParams 
+  searchParams
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -19,7 +19,7 @@ const Map2 = ({
   const hoverPopup = useRef(null);
   const [loading, setLoading] = useState(false);
   const [activeLayers, setActiveLayers] = useState([]);
-  const [showStatsPanel, setShowStatsPanel] = useState(true);
+  const [showStatsPanel, setShowStatsPanel] = useState(false);
   const [currentCity, setCurrentCity] = useState('Ajaccio');
   const { numero, nomVoie, coordinates } = searchParams;
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -34,29 +34,29 @@ const Map2 = ({
   const selectedId = useRef(null);
 
 
-  const TILESET_ID = 'saber5180.3oxcv6ps'; 
+  const TILESET_ID = 'saber5180.3oxcv6ps';
   const SOURCE_LAYER = 'partaaaaaaaaaaaaaaaaaa1-5qm32j';
-  const LAYER_ID = 'parcels-interactive-layer'; 
+  const LAYER_ID = 'parcels-interactive-layer';
 
 
 
-  
+
   const typeNames = [
     "Appartement",
+    "Maison",
     "Local",
     "Terrain",
-    "Bien Multiple",
-    "Maison"
+    "Bien Multiple"
   ];
-
 
   const getShortTypeName = (typeBien) => {
     const names = {
       "Appartement": "Appartement",
+      "Maison": "Maison",
       "Local industriel. commercial ou assimilé": "Local",
       "Terrain": "Terrain",
       "Bien Multiple": "Bien Multiple",
-      "Maison": "Maison"
+
     };
     return names[typeBien] || typeBien.split(' ')[0];
   };
@@ -67,15 +67,15 @@ const Map2 = ({
 
 
   useEffect(() => {
+    const panelRef = document.querySelector('.sidebar-panel');
     const handleOutsideClick = (e) => {
-      if (showStatsPanel && !e.target.closest('.sidebar-panel')) {
+      if (showStatsPanel && panelRef && !panelRef.contains(e.target)) {
         setShowStatsPanel(false);
       }
     };
     document.addEventListener('click', handleOutsideClick);
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [showStatsPanel]);
-  
 
 
 
@@ -83,7 +83,8 @@ const Map2 = ({
 
 
 
-  
+
+
   const normalizeSearchParams = (str) => {
     return typeof str === 'string'
       ? str
@@ -115,7 +116,7 @@ const Map2 = ({
 
   useEffect(() => {
     if (!map.current) return;
-   
+
     const fetchMutations = async (street, commune) => {
       try {
         const response = await axios.get(
@@ -127,7 +128,7 @@ const Map2 = ({
             }
           }
         );
-  
+
         const formatted = response.data.map(mutation => ({
           id: mutation.idmutation,
           address: mutation.addresses?.[0] || 'Adresse inconnue',
@@ -139,16 +140,16 @@ const Map2 = ({
           pricePerSqm: mutation.valeurfonc && mutation.surface ?
             `${Math.round(mutation.valeurfonc / mutation.surface).toLocaleString('fr-FR')} €/m²` : 'N/A'
         }));
-  
+
         onPropertiesFound(formatted);
       } catch (error) {
         console.error('Error fetching mutations:', error);
         onPropertiesFound([]);
       }
     };
-   
-    
-    
+
+
+
     const updateLocationName = async () => {
       try {
         const center = map.current.getCenter();
@@ -168,8 +169,8 @@ const Map2 = ({
         console.error('Erreur de géocodage:', error);
       }
     };
-   
-   
+
+
     map.current.on('moveend', updateLocationName);
     map.current.on('zoomend', updateLocationName);
 
@@ -191,9 +192,9 @@ const Map2 = ({
         throw new Error('Données d\'adresse incomplètes');
       }
 
-     
+
       const params = new URLSearchParams({
-        novoie: numero.replace(/\D/g, ''), 
+        novoie: numero.replace(/\D/g, ''),
         voie: nomVoie
       });
 
@@ -214,12 +215,12 @@ const Map2 = ({
         const addressParts = rawAddress.split(' ');
         const streetNumber = addressParts.find(part => /^\d+/.test(part)) || '';
         const streetNameParts = addressParts.filter(part => part !== streetNumber && !/^\d{5}/.test(part));
-        const cityParts = addressParts.slice(-2); 
+        const cityParts = addressParts.slice(-2);
 
         return {
           id: mutation.idmutation || Date.now(),
-          address: `${streetNumber} ${streetNameParts.join(' ')}`, 
-          city: cityParts.join(' '), 
+          address: `${streetNumber} ${streetNameParts.join(' ')}`,
+          city: cityParts.join(' '),
           numericPrice: valeurfonc,
           numericSurface: surface,
           price: `${Math.round(valeurfonc).toLocaleString('fr-FR')} €`,
@@ -254,7 +255,7 @@ const Map2 = ({
     try {
       setLoading(true);
       const formattedProperties = await fetchAddressData(properties);
-  
+
       if (formattedProperties.length > 0) {
         onPropertySelect?.(formattedProperties[0]);
         onPropertiesFound?.(formattedProperties);
@@ -305,7 +306,7 @@ const Map2 = ({
     `;
     container.appendChild(loadingIndicator);
 
-  
+
     const formattedProperties = await fetchAddressData(properties);
     const getPropertyTypeColor = (type) => {
       const colorMap = {
@@ -315,19 +316,19 @@ const Map2 = ({
         "bien multiple": "#2563EB",
         "maison": "#1E3A8A"
       };
-      return colorMap[type.toLowerCase().trim()] || "#9CA3AF"; 
+      return colorMap[type.toLowerCase().trim()] || "#9CA3AF";
     };
-    
+
     if (formattedProperties.length > 0) {
       container.innerHTML = '';
 
-      const property = formattedProperties[0]; 
+      const property = formattedProperties[0];
 
       const propertyTypeLabel = property.type
-      .toLowerCase()
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
       const cityName = property.city.split(' ')[1] || '';
 
       const priceFormatted = property.numericPrice.toLocaleString('fr-FR') + ' €';
@@ -384,7 +385,7 @@ const Map2 = ({
         </div>
       </div>
     `;
-    
+
 
 
 
@@ -396,7 +397,7 @@ const Map2 = ({
 
     } else {
       const addressLine = properties?.address || '';
-      console.log('Raw address:', addressLine); 
+      console.log('Raw address:', addressLine);
 
       let street = '';
       let cityName = '';
@@ -497,13 +498,13 @@ const Map2 = ({
     }), 'top-right');
 
     map.current.on('load', () => {
-     
+
       map.current.addSource('parcels-source', {
         type: 'vector',
         url: `mapbox://${TILESET_ID}`
       });
 
-   
+
       map.current.addLayer({
         id: LAYER_ID,
         type: 'fill',
@@ -512,11 +513,11 @@ const Map2 = ({
         paint: {
           'fill-color': [
             'case',
-            ['boolean', ['feature-state', 'selected'], false], 
-            '#2196F3', 
-            ['boolean', ['feature-state', 'hover'], false], 
-            '#CCCCCC', 
-            '#FFFFFF'  
+            ['boolean', ['feature-state', 'selected'], false],
+            '#2196F3',
+            ['boolean', ['feature-state', 'hover'], false],
+            '#CCCCCC',
+            '#FFFFFF'
           ],
           'fill-opacity': [
             'case',
@@ -558,7 +559,7 @@ const Map2 = ({
         }
       });
 
-   
+
       map.current.on('click', LAYER_ID, (e) => {
         if (e.features.length > 0) {
           const feature = e.features[0];
@@ -587,7 +588,7 @@ const Map2 = ({
         }
       });
 
-    
+
       map.current.on('mouseleave', LAYER_ID, () => {
         if (hoveredId.current) {
           map.current.setFeatureState(
@@ -613,7 +614,7 @@ const Map2 = ({
       setActiveLayers(visibleLayers.map(l => l.id));
 
       visibleLayers.forEach(({ id: layerId }) => {
-  
+
         map.current.on('click', layerId, (e) => {
           hoverPopup.current?.remove();
           popup.current?.remove();
@@ -625,19 +626,19 @@ const Map2 = ({
 
 
         map.current.on('mouseenter', layerId, (e) => {
-    
+
           if (!e.features || e.features.length === 0) return;
 
           map.current.getCanvas().style.cursor = 'pointer';
 
-          
+
           popup.current?.remove();
           popup.current = null;
 
-       
+
           hoverPopup.current?.remove();
 
-      
+
           hoverPopup.current = new mapboxgl.Popup({
             offset: 12,
             closeOnClick: false,
@@ -647,16 +648,16 @@ const Map2 = ({
             .setLngLat(e.lngLat)
             .addTo(map.current);
 
- 
+
           const feature = e.features[0];
 
           if (feature.properties) {
-         
+
             createHoverPopupContent({
               numero: feature.properties.numero,
               nomVoie: feature.properties.nomVoie
             }).then(content => {
-           
+
               if (hoverPopup.current) {
                 hoverPopup.current.setDOMContent(content);
               }
@@ -664,10 +665,10 @@ const Map2 = ({
           }
         });
 
-     
+
         map.current.on('mouseleave', layerId, () => {
           map.current.getCanvas().style.cursor = '';
-       
+
           if (hoverPopup.current && !popup.current) {
             hoverPopup.current.remove();
             hoverPopup.current = null;
@@ -695,7 +696,7 @@ const Map2 = ({
   const propertyTypeIcons = [
 
 
-    
+
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
       <rect x="9" y="9" width="6" height="6"></rect>
@@ -810,38 +811,32 @@ const Map2 = ({
           </svg>
         )}
       </button>
-  
+
       {/* Stats Panel */}
       {showStatsPanel && (
-        <div className="absolute top-4 left-16 z-10 bg-white rounded-xl shadow-lg p-4 w-3/2 border border-gray-100">
+        <div className="absolute top-4 left-16 z-10 bg-white rounded-xl shadow-lg p-4 w-[448px] border border-gray-100" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-base font-bold text-gray-800">Statistiques de marché</h3>
-            <div className="text-base font-bold text-right">{currentCity}</div>
+            <h3 className="text-sm font-semibold text-gray-800">Statistiques Marché</h3>
+            <div className="text-sm font-medium text-gray-600">{currentCity}</div>
           </div>
-  
+
           <div className="h-px bg-gray-200 w-full mb-3" />
-  
-          {/* Normalize data with zero-filled missing types */}
+
           {(() => {
-            const typeNames = ["Appartement", "Local", "Terrain", "Bien Multiple", "Maison"];
-            const getShortTypeName = (typeBien) => {
-              const names = {
-                "Appartement": "Appartement",
-                "Local industriel. commercial ou assimilé": "Local",
-                "Terrain": "Terrain",
-                "Bien Multiple": "Bien Multiple",
-                "Maison": "Maison"
-              };
-              return names[typeBien] || typeBien.split(' ')[0];
-            };
-  
-            const getIndigoShade = (idx) => {
-              const shades = ["bg-indigo-600", "bg-violet-500", "bg-blue-400", "bg-blue-600", "bg-blue-900"];
-              return shades[idx % shades.length];
-            };
-  
-            const normalizedStats = typeNames.map((shortName) => {
-              const match = propertyStats.find((item) => getShortTypeName(item.typeBien) === shortName);
+            const typeNames = ["Appartement", "Maison", "Local", "Terrain", "Bien Multiple"];
+
+            const getIndigoShade = (idx) => [
+              "bg-indigo-600",
+              "bg-violet-500",
+              "bg-blue-400",
+              "bg-blue-600",
+              "bg-blue-900"
+            ][idx];
+
+            const normalizedStats = typeNames.map(shortName => {
+              const match = propertyStats.find(item =>
+                getShortTypeName(item.typeBien) === shortName
+              );
               return {
                 typeBien: shortName,
                 nombre: match?.nombre || 0,
@@ -849,51 +844,50 @@ const Map2 = ({
                 prixM2Moyen: match?.prixM2Moyen || 0
               };
             });
-  
+
             return (
               <>
-                {/* Tabs */}
-                <div className="flex mb-3 gap-2">
+                {/* Onglets */}
+                <div className="flex mb-3 gap-1">
                   {normalizedStats.map((stat, index) => (
                     <button
                       key={stat.typeBien}
-                      className={`flex-1 py-2 px-4 rounded-xl text-center text-sm font-maven transition-colors ${
-                        activePropertyType === index
-                          ? `${getIndigoShade(index)} text-white font-medium`
-                          : "text-gray-500 hover:bg-gray-200"
-                      }`}
+                      className={`flex-1 py-2 px-2 rounded-lg text-center text-xs font-medium ${activePropertyType === index
+                          ? `${getIndigoShade(index)} text-white`
+                          : "text-gray-600 hover:bg-gray-100 bg-gray-50"
+                        }`}
                       onClick={() => setActivePropertyType(index)}
                     >
                       {stat.typeBien}
                     </button>
                   ))}
                 </div>
-  
-                {/* Stats Content */}
+
+                {/* Stats */}
                 {isLoading ? (
-                  <div className="flex justify-center py-3">
+                  <div className="flex justify-center py-2">
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-500 border-t-transparent" />
                   </div>
                 ) : error ? (
-                  <div className="text-red-500 text-center py-2 text-xs">⚠️ {error}</div>
+                  <div className="text-red-500 text-center py-1 text-xs">⚠️ {error}</div>
                 ) : (
-                  <div className="flex justify-between gap-2">
-                    <div className="bg-gray-100 p-2 rounded-lg flex-1 border border-gray-200">
-                      <p className="text-gray-500 text-xs mb-0.5">Nombre de Ventes</p>
-                      <p className="text-sm font-bold text-gray-800">
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                      <p className="text-xs text-gray-600 mb-1">Ventes</p>
+                      <p className="text-sm font-semibold text-gray-900">
                         {formatNumber(normalizedStats[activePropertyType]?.nombre)}
                       </p>
                     </div>
-                    <div className="bg-gray-100 p-2 rounded-lg flex-1 border border-gray-200">
-                      <p className="text-gray-500 text-xs mb-0.5">Prix Médian</p>
-                      <p className="text-sm font-bold text-gray-800">
+                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                      <p className="text-xs text-gray-600 mb-1">Prix Médian</p>
+                      <p className="text-sm font-semibold text-gray-900">
                         {formatNumber(normalizedStats[activePropertyType]?.prixMoyen)}€
                       </p>
                     </div>
-                    <div className="bg-gray-100 p-2 rounded-lg flex-1 border">
-                      <p className="text-gray-500 text-xs mb-0.5">Prix au m²</p>
-                      <p className="text-sm font-bold text-gray-800">
-                        {formatNumber(normalizedStats[activePropertyType]?.prixM2Moyen)}€
+                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                      <p className="text-xs text-gray-600 mb-1">€/m²</p>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {formatNumber(normalizedStats[activePropertyType]?.prixM2Moyen)}
                       </p>
                     </div>
                   </div>
@@ -903,7 +897,7 @@ const Map2 = ({
           })()}
         </div>
       )}
-  
+
       {/* Controls */}
       <div className="absolute top-20 right-5 flex flex-col gap-2 z-10">
         <div className="bg-white rounded-lg shadow-md flex flex-col">
@@ -919,7 +913,7 @@ const Map2 = ({
             </svg>
           </button>
         </div>
-  
+
         <button
           onClick={() => map.current?.setStyle('mapbox://styles/saber5180/cm9737hvv00en01qzefcd57b7')}
           className="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 flex items-center justify-center"
@@ -931,9 +925,9 @@ const Map2 = ({
           </svg>
         </button>
       </div>
-  
+
       <div ref={mapContainer} className="h-full w-full" />
-  
+
       {loading && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded-lg flex items-center shadow-xl">
@@ -947,7 +941,7 @@ const Map2 = ({
       )}
     </div>
   );
-  
+
 };
 
 export default Map2;

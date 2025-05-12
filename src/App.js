@@ -34,7 +34,7 @@ function App() {
               element={
                 <div className="flex flex-col h-full">
                   <SearchBar onSearch={setSearchParams} />
-                  <div className="flex-1 container px-4 lg:px-10 pb-4 pt-2 mx-auto">
+                  <div className="flex-1 container   pb-4 pt-2 ">
                     <div className="flex h-full shadow-lg border border-gray-200 rounded-lg overflow-hidden bg-white">
                       <PropertyList properties={properties} searchParams={searchParams} />
                     </div>
