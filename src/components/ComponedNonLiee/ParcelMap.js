@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-mapboxgl.accessToken = 'VOTRE_CLE_MAPBOX';
+
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2FiZXI1MTgwIiwiYSI6ImNtOGhqcWs4cTAybnEycXNiaHl6eWgwcjAifQ.8C8bv3cwz9skLXv-y6U3FA';
+
 
 const AddressHighlighter = () => {
   const mapContainer = useRef(null);

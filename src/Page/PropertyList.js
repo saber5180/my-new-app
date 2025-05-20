@@ -131,7 +131,7 @@ const PropertyList = ({ searchParams }) => {
       setCurrentCity(communeName && streetName ? `${communeName}, ${streetName}` : communeName || streetName);
   
       if (communeName && streetName) {
-        const response = await axios.get('http://localhost:8080/api/mutations/mutations/by-street-and-commune', {
+        const response = await axios.get('https://immoxperts.apeiron-tech.dev/api/mutations/mutations/by-street-and-commune', {
           params: {
             street: streetName,  // Full normalized street name
             commune: communeName // Normalized commune name

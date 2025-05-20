@@ -120,7 +120,7 @@ const Map2 = ({
     const fetchMutations = async (street, commune) => {
       try {
         const response = await axios.get(
-          'http://localhost:8080/api/mutations/mutations/by-street-and-commune',
+          'https://immoxperts.apeiron-tech.dev/api/mutations/mutations/by-street-and-commune',
           {
             params: {
               street: encodeURIComponent(street),
@@ -198,7 +198,7 @@ const Map2 = ({
         voie: nomVoie
       });
 
-      const response = await fetch(`http://localhost:8080/api/mutations/search?${params}`);
+      const response = await fetch(`https://immoxperts.apeiron-tech.dev/api/mutations/search?${params}`);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -746,7 +746,7 @@ const Map2 = ({
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:8080/api/mutations/statistics/${currentCity.toLowerCase()}`
+          `https://immoxperts.apeiron-tech.dev/api/mutations/statistics/${currentCity.toLowerCase()}`
         );
         setPropertyStats(response.data);
       } catch (err) {
