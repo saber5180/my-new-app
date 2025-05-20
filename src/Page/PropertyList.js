@@ -160,7 +160,7 @@ const PropertyList = ({ searchParams }) => {
 
   
   return (
-    <div className="flex flex-col lg:flex-row w-full h-screen overflow-hidden">
+    <div className="flex flex-col lg:flex-row w-full pb-4 h-screen overflow-hidden">
       {/* Left Sidebar */}
       <div className={`w-full lg:w-1/3 flex flex-col h-full ${activeView === 'map' && 'hidden lg:flex'}`}>
         <AnimatePresence mode='wait'>
@@ -189,15 +189,15 @@ const PropertyList = ({ searchParams }) => {
                     >
                       &times;
                     </button>
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-xl font-bold text-gray-900">
                       {selectedProperty.address}
                     </h1>
-                    <p className="text-gray-600 text-lg">{selectedProperty.city}</p>
+                    <p className="text-gray-600 text-sm">{selectedProperty.city}</p>
                   </motion.div>
 
                   {/* Transaction History */}
                   <motion.div
-                    className="bg-blue-50 p-4 rounded-lg space-y-2"
+                    className="bg-blue-50 p-3 rounded-lg space-y-2"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.3, duration: 0.4 }}
@@ -358,8 +358,8 @@ const PropertyList = ({ searchParams }) => {
         </AnimatePresence>
       </div>
  {/* Right Section (Map) */}
- <div className={`w-full lg:w-2/3 h-full relative ${activeView === 'list' ? 'hidden lg:block' : 'block'}`}>
-        <div className="h-full border rounded-lg overflow-hidden">
+ <div className={`w-full lg:w-3/4 h-full relative ${activeView === 'list' ? 'hidden lg:block' : 'block'}`}>
+        <div className="h-full border  overflow-hidden">
         <Map2
       onMapMove={handleMapMove}
       onPropertiesFound={handlePropertiesFound}
