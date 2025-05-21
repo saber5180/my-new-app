@@ -34,8 +34,8 @@ const Map2 = ({
   const selectedId = useRef(null);
 
 
-  const TILESET_ID = 'saber5180.3oxcv6ps';
-  const SOURCE_LAYER = 'partaaaaaaaaaaaaaaaaaa1-5qm32j';
+  const TILESET_ID = 'saber5180.0h0q6jw3';
+  const SOURCE_LAYER = 'cadastre-2A2-Parcelles-2s9utu';
   const LAYER_ID = 'parcels-interactive-layer';
 
 
@@ -472,12 +472,15 @@ const Map2 = ({
     return container;
   };
 
+
+
+  
   useEffect(() => {
     if (!mapContainer.current) return;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/saber5180/cm8uhol1600ih01sa3d3d2xjw',
+      style: 'mapbox://styles/saber5180/cmawpgdtd007301sc5ww48tds',
       center: [8.73692, 41.92810],
       zoom: 17,
       attributionControl: false
@@ -514,9 +517,9 @@ const Map2 = ({
           'fill-color': [
             'case',
             ['boolean', ['feature-state', 'selected'], false],
-            '#2196F3',
+            '#0000FF',
             ['boolean', ['feature-state', 'hover'], false],
-            '#CCCCCC',
+            '#89CFF0',
             '#FFFFFF'
           ],
           'fill-opacity': [
@@ -731,14 +734,6 @@ const Map2 = ({
   const toggleStatsPanel = () => {
     setShowStatsPanel(prev => !prev);
   };
-
-
-
-
-
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       if (!currentCity) return;
@@ -774,13 +769,6 @@ const Map2 = ({
   const formatNumber = (num) => {
     return new Intl.NumberFormat('fr-FR').format(num);
   };
-
-
-
-
-
-
-
 
 
   // 📌 Regrouper les stats par nom court
