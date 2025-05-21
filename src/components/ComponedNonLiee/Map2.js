@@ -116,7 +116,7 @@ const Map2 = ({
 
   useEffect(() => {
     if (!map.current) return;
-
+{/*}
     const fetchMutations = async (street, commune) => {
       try {
         const response = await axios.get(
@@ -148,7 +148,7 @@ const Map2 = ({
       }
     };
 
-
+*/}
 
     const updateLocationName = async () => {
       try {
@@ -780,7 +780,7 @@ const Map2 = ({
 
   return (
     <div className="relative h-screen w-full">
-      <button
+     {/* <button
         onClick={() => {
           if (!showStatsPanel) {
             setActivePropertyType(0);
@@ -800,7 +800,7 @@ const Map2 = ({
         )}
       </button>
 
-      {/* Stats Panel */}
+      {/* Stats Panel 
       {showStatsPanel && (
         <div className="absolute top-4 left-16 z-10 bg-white rounded-xl shadow-lg p-4 w-[448px] border border-gray-100" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-center mb-2">
@@ -835,7 +835,7 @@ const Map2 = ({
 
             return (
               <>
-                {/* Onglets */}
+               
                 <div className="flex mb-3 gap-1">
                   {normalizedStats.map((stat, index) => (
                     <button
@@ -851,7 +851,7 @@ const Map2 = ({
                   ))}
                 </div>
 
-                {/* Stats */}
+              
                 {isLoading ? (
                   <div className="flex justify-center py-2">
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-500 border-t-transparent" />
@@ -885,7 +885,7 @@ const Map2 = ({
           })()}
         </div>
       )}
-
+*/}
       {/* Controls */}
       <div className="absolute top-20 right-5 flex flex-col gap-2 z-10">
         <div className="bg-white rounded-lg shadow-md flex flex-col">
