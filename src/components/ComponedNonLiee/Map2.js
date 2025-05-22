@@ -34,8 +34,8 @@ const Map2 = ({
   const selectedId = useRef(null);
 
 
-  const TILESET_ID = 'saber5180.3oxcv6ps';
-  const SOURCE_LAYER = 'partaaaaaaaaaaaaaaaaaa1-5qm32j';
+  const TILESET_ID = 'saber5180.0h0q6jw3';
+  const SOURCE_LAYER = 'cadastre-2A2-Parcelles-2s9utu';
   const LAYER_ID = 'parcels-interactive-layer';
 
 
@@ -472,12 +472,15 @@ const Map2 = ({
     return container;
   };
 
+
+
+  
   useEffect(() => {
     if (!mapContainer.current) return;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/saber5180/cm8uhol1600ih01sa3d3d2xjw',
+      style: 'mapbox://styles/saber5180/cmawpgdtd007301sc5ww48tds',
       center: [8.73692, 41.92810],
       zoom: 17,
       attributionControl: false
@@ -514,10 +517,10 @@ const Map2 = ({
           'fill-color': [
             'case',
             ['boolean', ['feature-state', 'selected'], false],
-            '#2196F3',
+            '#0000FF',
             ['boolean', ['feature-state', 'hover'], false],
-            '#CCCCCC',
-            '#FFFFFF'
+            '#89CFF0',
+            '#89CFF0'
           ],
           'fill-opacity': [
             'case',
@@ -731,14 +734,6 @@ const Map2 = ({
   const toggleStatsPanel = () => {
     setShowStatsPanel(prev => !prev);
   };
-
-
-
-
-
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       if (!currentCity) return;
@@ -776,13 +771,6 @@ const Map2 = ({
   };
 
 
-
-
-
-
-
-
-
   // 📌 Regrouper les stats par nom court
   const statsByShortType = {};
   propertyStats.forEach((stat) => {
@@ -792,7 +780,7 @@ const Map2 = ({
 
   return (
     <div className="relative h-screen w-full">
-      <button
+     <button
         onClick={() => {
           if (!showStatsPanel) {
             setActivePropertyType(0);
@@ -812,7 +800,7 @@ const Map2 = ({
         )}
       </button>
 
-      {/* Stats Panel */}
+     
       {showStatsPanel && (
         <div className="absolute top-4 left-16 z-10 bg-white rounded-xl shadow-lg p-4 w-[448px] border border-gray-100" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-center mb-2">
@@ -847,7 +835,7 @@ const Map2 = ({
 
             return (
               <>
-                {/* Onglets */}
+               
                 <div className="flex mb-3 gap-1">
                   {normalizedStats.map((stat, index) => (
                     <button
@@ -863,7 +851,7 @@ const Map2 = ({
                   ))}
                 </div>
 
-                {/* Stats */}
+              
                 {isLoading ? (
                   <div className="flex justify-center py-2">
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-500 border-t-transparent" />
