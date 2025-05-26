@@ -60,51 +60,56 @@ const handleAddressSelect = (feature) => {
   };
 
  
-  return (
-    <div className="container mx-auto px-4 py-6 flex justify-center">
-      <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-2xl">
-        <div className="relative w-full md:w-auto flex-grow">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </div>
-          <input
-            type="text"
-            placeholder="Entrez une adresse en France"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setShowSuggestions(true)}
-            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-
-          {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
-              {suggestions.map((feature, index) => (
-                <button
-                  key={index}
-                  className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                  onMouseDown={() => handleAddressSelect(feature)}
-                >
-                  <div className="text-sm font-medium">{feature.place_name}</div>
-                  <div className="text-xs text-gray-500">
-                    {feature.context?.map(ctx => ctx.text).join(', ')}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+return (
+  <div className="w-full px-4 py-3">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 max-w-2xl mx-auto w-full">
+      
+      {/* Search Input */}
+      <div className="relative w-full">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
         </div>
+        <input
+          type="text"
+          placeholder="Entrez une adresse en France"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
 
-        {/* Filter Button */}
-        <button
-          className="flex items-center justify-center gap-2 border px-6 py-3 rounded-xl hover:bg-opacity-10 transition-colors"
-          style={{ borderColor: "#7069F9", color: "#7069F9", backgroundColor: "transparent" }}
-          onClick={() => setIsFilterOpen(true)}
-        >
-          {/* Filter icon */}
+        {/* Suggestions Dropdown */}
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+            {suggestions.map((feature, index) => (
+              <button
+                key={index}
+                className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                onMouseDown={() => handleAddressSelect(feature)}
+              >
+                <div className="text-sm font-medium">{feature.place_name}</div>
+                <div className="text-xs text-gray-500">
+                  {feature.context?.map(ctx => ctx.text).join(', ')}
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Filter Button */}
+      <button
+        className="w-full sm:w-auto flex items-center justify-center gap-2 border px-6 py-3 rounded-lg hover:bg-opacity-10 transition-colors"
+        style={{ borderColor: "#7069F9", color: "#7069F9", backgroundColor: "transparent" }}
+        onClick={() => setIsFilterOpen(true)}
+      >
+        {/* Filter icon */}
+       
+          {/* SVG content here */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M3.26172 17.2446C3.26172 16.8304 3.59751 16.4946 4.01172 16.4946H10.4842C10.8985 16.4946 11.2342 16.8304 11.2342 17.2446C11.2342 17.6588 10.8985 17.9946 10.4842 17.9946H4.01172C3.59751 17.9946 3.26172 17.6588 3.26172 17.2446Z" fill="#7069F9" />
@@ -112,23 +117,23 @@ const handleAddressSelect = (feature) => {
               <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7676 6.75594C12.7676 6.34172 13.1034 6.00594 13.5176 6.00594H19.9892C20.4034 6.00594 20.7392 6.34172 20.7392 6.75594C20.7392 7.17015 20.4034 7.50594 19.9892 7.50594H13.5176C13.1034 7.50594 12.7676 7.17015 12.7676 6.75594Z" fill="#7069F9" />
               <path fill-rule="evenodd" clip-rule="evenodd" d="M4.07713 4.09797C4.72495 3.45031 5.67188 3.28281 6.7344 3.28281C7.79655 3.28281 8.74326 3.45034 9.39096 4.09804C10.0387 4.74574 10.2062 5.69245 10.2062 6.7546C10.2062 7.81709 10.0387 8.76392 9.39089 9.41156C8.74313 10.0592 7.79635 10.2264 6.7344 10.2264C5.67208 10.2264 4.72509 10.0592 4.0772 9.41163C3.42921 8.76398 3.26172 7.81708 3.26172 6.7546C3.26172 5.69245 3.42924 4.74568 4.07713 4.09797ZM5.13765 5.15877C4.93464 5.36172 4.76172 5.77584 4.76172 6.7546C4.76172 7.7339 4.93468 8.1479 5.13758 8.35069C5.34059 8.55359 5.75494 8.72639 6.7344 8.72639C7.71335 8.72639 8.12747 8.55362 8.33037 8.35076C8.53324 8.14795 8.70619 7.73389 8.70619 6.7546C8.70619 5.77585 8.53328 5.36167 8.3303 5.1587C8.12733 4.95572 7.71315 4.78281 6.7344 4.78281C5.75514 4.78281 5.34072 4.95575 5.13765 5.15877Z" fill="#7069F9" />
             </svg>
-          </svg>
-          <span>Filtres</span>
-        </button>
+        </svg>
+        <span>Filtres</span>
+      </button>
 
-        {isFilterOpen && (
-          <FilterPopup
-            isOpen={isFilterOpen}
-            onClose={() => setIsFilterOpen(false)}
-            onApply={(filters) => {
-              // Handle your filter logic here
-              setIsFilterOpen(false);
-            }}
-          />
-        )}
-      </div>
+      {isFilterOpen && (
+        <FilterPopup
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          onApply={(filters) => {
+            setIsFilterOpen(false);
+          }}
+        />
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default SearchBar;

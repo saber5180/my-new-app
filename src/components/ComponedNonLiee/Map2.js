@@ -223,7 +223,7 @@ const Map2 = ({
           city: cityParts.join(' '),
           numericPrice: valeurfonc,
           numericSurface: surface,
-          price: `${Math.round(valeurfonc).toLocaleString('fr-FR')} €`,
+          price: `${Math.round(valeurfonc).toLocaleString('fr-FR')}€`,
           pricePerSqm: `${Math.round(valeurfonc / surface).toLocaleString('fr-FR')} €`,
           type: (mutation.libtyplocList?.[0] || 'Terrain')
             .replace(/\./g, '')
@@ -352,7 +352,7 @@ const Map2 = ({
         <div style="font-size: 16px;width:70%; color: #333;">
           <span style="color: ${getPropertyTypeColor(propertyTypeLabel)}; font-weight: 900; margin-bottom: 10px;">
             ${propertyTypeLabel}
-          </span><br/>
+          </span>
           <span style="margin-top: 10px;">${property.rooms} pièces – ${property.surface}</span>
         </div>
     
@@ -436,58 +436,145 @@ const Map2 = ({
     return container;
   };
   const createPopupContent = (features) => {
-    const container = document.createElement('div');
-    container.className = 'popup-container';
+  const container = document.createElement('div');
+  container.className = 'popup-container';
 
-    const title = document.createElement('h3');
-    title.className = 'popup-title';
-    title.textContent = 'ADDRESSES';
+  const title = document.createElement('h3');
+  title.className = 'popup-title';
+  title.textContent = `choisissez une Adresse`;
 
-    const content = document.createElement('div');
-    content.className = 'popup-content';
+  const content = document.createElement('div');
+  content.className = 'popup-content';
 
-    features.forEach((feature, index) => {
-      const button = document.createElement('button');
-      button.className = 'popup-item';
-      button.innerHTML = `
-        ${feature.properties.numero || 'N/A'} 
-        ${(feature.properties.nomVoie || '').toUpperCase()}
-      `;
+  features.forEach((feature, index) => {
+    const button = document.createElement('button');
+    button.className = 'popup-item';
+    button.innerHTML = `
+      <span class="address-number">${feature.properties.numero || 'N/A'}</span>
+      <span class="address-street">${(feature.properties.nomVoie || '').toUpperCase()}</span>
+      
+    `;
 
-      button.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (feature.properties) {
-          handleAddressClick({
-            numero: feature.properties.numero,
-            nomVoie: feature.properties.nomVoie
-          });
-        }
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleAddressClick({
+        numero: feature.properties.numero,
+        nomVoie: feature.properties.nomVoie
       });
-
-      content.appendChild(button);
+      popup.current?.remove();
     });
 
-    container.appendChild(title);
-    container.appendChild(content);
-    return container;
+    content.appendChild(button);
+  });
+
+  container.appendChild(title);
+  container.appendChild(content);
+  
+  return container;
+};
+
+
+
+  useEffect(() => {
+ if (!mapContainer.current) return;
+
+  // Initialize map first
+  map.current = new mapboxgl.Map({
+    container: mapContainer.current,
+    style: 'mapbox://styles/saber5180/cmawpgdtd007301sc5ww48tds',
+    center: [8.73692, 41.92810],
+    zoom: 17,
+    attributionControl: false
+  });
+
+  // Create scale elements first
+  const scaleContainer = document.createElement('div');
+  const scaleLine = document.createElement('div');
+  const scaleText = document.createElement('div');
+
+  // Apply styles
+  Object.assign(scaleContainer.style, {
+    position: 'absolute',
+    zIndex: 10,
+    top: '10px',
+    right: '10px',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: '0 6px',
+    borderRadius: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    pointerEvents: 'none'
+  });
+
+  Object.assign(scaleLine.style, {
+    border: '2px solid #7e8490',
+    borderTop: 'none',
+    height: '7px',
+    width: '100px',
+    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3)'
+  });
+
+  Object.assign(scaleText.style, {
+    marginLeft: '8px',
+    fontSize: '12px',
+    color: '#4a5568'
+  });
+
+  scaleContainer.appendChild(scaleLine);
+  scaleContainer.appendChild(scaleText);
+
+
+    const updateScale = () => {
+    if (!map.current) return;
+
+    const zoom = map.current.getZoom();
+    const center = map.current.getCenter();
+    const metersPerPixel = 156543.03392 * Math.cos(center.lat * Math.PI / 180) / Math.pow(2, zoom);
+    const widthMeters = metersPerPixel * 100;
+
+    let displayWidth = 100;
+    let displayText = '0 m';
+
+    if (!isNaN(widthMeters)) {
+      if (widthMeters > 1000) {
+        displayText = `${(widthMeters / 1000).toFixed(1)}km`;
+        displayWidth = (1000 / widthMeters) * 100;
+      } else {
+        displayText = `${Math.round(widthMeters)}m`;
+      }
+    }
+
+    scaleLine.style.width = `${displayWidth}px`;
+    scaleText.textContent = displayText;
   };
 
+  // Add control after defining updateScale
+  map.current.addControl({
+    onAdd: () => {
+      // Initial update
+      updateScale();
+      return scaleContainer;
+    },
+    onRemove: () => scaleContainer.remove()
+  }, 'top-right');
 
+  // Set up event listeners
+  map.current.on('move', updateScale);
+  map.current.on('zoom', updateScale);
 
-  
-  useEffect(() => {
-    if (!mapContainer.current) return;
+  // Rest of your existing map setup...
+  map.current.on('load', () => {
+    // Your existing layer setup
+    updateScale(); // Additional initial update after load
+  });
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/saber5180/cmawpgdtd007301sc5ww48tds',
-      center: [8.73692, 41.92810],
-      zoom: 17,
-      attributionControl: false
-    });
-
-
-
+  // Rest of your existing map setup...
+  map.current.on('moveend', () => {
+    const center = map.current.getCenter();
+    if (typeof onMapMove === 'function') {
+      onMapMove([center.lng, center.lat]);
+    }
+  });
     map.current.on('moveend', () => {
       const center = map.current.getCenter();
       if (typeof onMapMove === 'function') {
@@ -496,9 +583,7 @@ const Map2 = ({
     });
 
 
-    map.current.addControl(new mapboxgl.ScaleControl({
-      unit: 'metric'
-    }), 'top-right');
+ 
 
     map.current.on('load', () => {
 
@@ -619,15 +704,30 @@ const Map2 = ({
       visibleLayers.forEach(({ id: layerId }) => {
 
         map.current.on('click', layerId, (e) => {
-          hoverPopup.current?.remove();
-          popup.current?.remove();
-          popup.current = new mapboxgl.Popup({ offset: 25, closeOnClick: false })
-            .setLngLat(e.lngLat)
-            .setDOMContent(createPopupContent(e.features))
-            .addTo(map.current);
-        });
 
+  popup.current?.remove();
 
+  if (e.features.length > 0) {
+    if (e.features.length === 1) {
+      // Un seul résultat - traitement direct
+      const feature = e.features[0];
+      handleAddressClick({
+        numero: feature.properties.numero,
+        nomVoie: feature.properties.nomVoie
+      });
+    } else {
+      // Multiple résultats - afficher le popup
+      popup.current = new mapboxgl.Popup({ 
+        offset: 25, 
+        closeOnClick: true,
+        className: 'multi-address-popup'
+      })
+      .setLngLat(e.lngLat)
+      .setDOMContent(createPopupContent(e.features))
+      .addTo(map.current);
+    }
+  }
+});
         map.current.on('mouseenter', layerId, (e) => {
 
           if (!e.features || e.features.length === 0) return;
@@ -778,157 +878,148 @@ const Map2 = ({
     statsByShortType[shortName] = stat;
   });
 
-  return (
-    <div className="relative h-screen w-full">
-     <button
-        onClick={() => {
-          if (!showStatsPanel) {
-            setActivePropertyType(0);
-          }
-          toggleStatsPanel();
-        }}
-        className="absolute top-4 left-6 z-20 bg-white text-gray-600 px-2 py-1 rounded-lg flex items-center gap-1 text-xs hover:bg-gray-50"
-      >
-        {showStatsPanel ? (
-          <svg className="w-6 h-6 text-red-500" viewBox="0 0 24 24">
-            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        ) : (
-          <svg className="w-6 h-6 text-blue-600" viewBox="0 0 24 24">
-            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        )}
-      </button>
-
-     
-      {showStatsPanel && (
-        <div className="absolute top-4 left-16 z-10 bg-white rounded-xl shadow-lg p-4 w-[448px] border border-gray-100" onClick={(e) => e.stopPropagation()}>
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-sm font-semibold text-gray-800">Statistiques Marché</h3>
-            <div className="text-sm font-medium text-gray-600">{currentCity}</div>
-          </div>
-
-          <div className="h-px bg-gray-200 w-full mb-3" />
-
-          {(() => {
-            const typeNames = ["Appartement", "Maison", "Local", "Terrain", "Bien Multiple"];
-
-            const getIndigoShade = (idx) => [
-              "bg-indigo-600",
-              "bg-violet-500",
-              "bg-blue-400",
-              "bg-blue-600",
-              "bg-blue-900"
-            ][idx];
-
-            const normalizedStats = typeNames.map(shortName => {
-              const match = propertyStats.find(item =>
-                getShortTypeName(item.typeBien) === shortName
-              );
-              return {
-                typeBien: shortName,
-                nombre: match?.nombre || 0,
-                prixMoyen: match?.prixMoyen || 0,
-                prixM2Moyen: match?.prixM2Moyen || 0
-              };
-            });
-
-            return (
-              <>
-               
-                <div className="flex mb-3 gap-1">
-                  {normalizedStats.map((stat, index) => (
-                    <button
-                      key={stat.typeBien}
-                      className={`flex-1 py-2 px-2 rounded-lg text-center text-xs font-medium ${activePropertyType === index
-                          ? `${getIndigoShade(index)} text-white`
-                          : "text-gray-600 hover:bg-gray-100 bg-gray-50"
-                        }`}
-                      onClick={() => setActivePropertyType(index)}
-                    >
-                      {stat.typeBien}
-                    </button>
-                  ))}
-                </div>
-
-              
-                {isLoading ? (
-                  <div className="flex justify-center py-2">
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-500 border-t-transparent" />
-                  </div>
-                ) : error ? (
-                  <div className="text-red-500 text-center py-1 text-xs">⚠️ {error}</div>
-                ) : (
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                      <p className="text-xs text-gray-600 mb-1">Ventes</p>
-                      <p className="text-sm font-semibold text-gray-900">
-                        {formatNumber(normalizedStats[activePropertyType]?.nombre)}
-                      </p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                      <p className="text-xs text-gray-600 mb-1">Prix Médian</p>
-                      <p className="text-sm font-semibold text-gray-900">
-                        {formatNumber(normalizedStats[activePropertyType]?.prixMoyen)}€
-                      </p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                      <p className="text-xs text-gray-600 mb-1">€/m²</p>
-                      <p className="text-sm font-semibold text-gray-900">
-                        {formatNumber(normalizedStats[activePropertyType]?.prixM2Moyen)}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </>
-            );
-          })()}
-        </div>
+ return (
+  <div className="relative h-screen w-full">
+    {/* Toggle Button */}
+    <button
+      onClick={() => {
+        if (!showStatsPanel) {
+          setActivePropertyType(0);
+        }
+        toggleStatsPanel();
+      }}
+      className="absolute top-4 left-4 z-30 bg-white text-gray-600 px-2 py-1 rounded-lg flex items-center gap-1 text-xs hover:bg-gray-50 sm:text-sm"
+    >
+      {showStatsPanel ? (
+        <svg className="w-6 h-6 text-red-500" viewBox="0 0 24 24">
+          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      ) : (
+        <svg className="w-6 h-6 text-blue-600" viewBox="0 0 24 24">
+          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
       )}
+    </button>
 
-      {/* Controls */}
-      <div className="absolute top-20 right-5 flex flex-col gap-2 z-10">
-        <div className="bg-white rounded-lg shadow-md flex flex-col">
-          <button onClick={() => map.current?.zoomIn()} className="p-2 hover:bg-gray-100 rounded-t-lg flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </button>
-          <div className="border-t"></div>
-          <button onClick={() => map.current?.zoomOut()} className="p-2 hover:bg-gray-100 rounded-b-lg flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M5 12h14" />
-            </svg>
-          </button>
+    {/* Stats Panel */}
+    {showStatsPanel && (
+      <div
+        className="fixed sm:absolute top-0 left-0 sm:top-4 sm:left-16 z-20 bg-white rounded-none sm:rounded-xl shadow-lg p-4 w-full sm:w-[448px] h-full sm:h-auto overflow-y-auto sm:overflow-visible border-t sm:border border-gray-100"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-sm font-semibold text-gray-800">Statistiques Marché</h3>
+          <div className="text-sm font-medium text-gray-600">{currentCity}</div>
         </div>
 
-        <button
-          onClick={() => map.current?.setStyle('mapbox://styles/saber5180/cm9737hvv00en01qzefcd57b7')}
-          className="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 flex items-center justify-center"
-          title="Changer le style de la carte"
-        >
+        <div className="h-px bg-gray-200 w-full mb-3" />
+
+        {(() => {
+          const typeNames = ["Appartement", "Maison", "Local", "Terrain", "Bien Multiple"];
+          const getIndigoShade = (idx) => [
+            "bg-indigo-600",
+            "bg-violet-500",
+            "bg-blue-400",
+            "bg-blue-600",
+            "bg-blue-900"
+          ][idx];
+
+          const normalizedStats = typeNames.map(shortName => {
+            const match = propertyStats.find(item =>
+              getShortTypeName(item.typeBien) === shortName
+            );
+            return {
+              typeBien: shortName,
+              nombre: match?.nombre || 0,
+              prixMoyen: match?.prixMoyen || 0,
+              prixM2Moyen: match?.prixM2Moyen || 0
+            };
+          });
+
+          return (
+            <>
+              <div className="flex flex-wrap sm:flex-nowrap mb-3 gap-2">
+                {normalizedStats.map((stat, index) => (
+                  <button
+                    key={stat.typeBien}
+                    className={`flex-1 py-2 px-2 rounded-lg text-center text-xs font-medium ${activePropertyType === index
+                      ? `${getIndigoShade(index)} text-white`
+                      : "text-gray-600 hover:bg-gray-100 bg-gray-50"
+                      }`}
+                    onClick={() => setActivePropertyType(index)}
+                  >
+                    {stat.typeBien}
+                  </button>
+                ))}
+              </div>
+
+              {isLoading ? (
+                <div className="flex justify-center py-2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-500 border-t-transparent" />
+                </div>
+              ) : error ? (
+                <div className="text-red-500 text-center py-1 text-xs">⚠️ {error}</div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <p className="text-xs text-gray-600 mb-1">Ventes</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {formatNumber(normalizedStats[activePropertyType]?.nombre)}
+                    </p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <p className="text-xs text-gray-600 mb-1">Prix Médian</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {formatNumber(normalizedStats[activePropertyType]?.prixMoyen)}€
+                    </p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <p className="text-xs text-gray-600 mb-1">€/m²</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {formatNumber(normalizedStats[activePropertyType]?.prixM2Moyen)}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
+      </div>
+    )}
+
+    {/* Map Controls */}
+    <div className="absolute top-20 right-5 flex flex-col gap-2 z-10">
+      <div className="bg-white rounded-lg shadow-md flex flex-col">
+        <button onClick={() => map.current?.zoomIn()} className="p-2 hover:bg-gray-100 rounded-t-lg flex items-center justify-center">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-            <path d="M7.5 4.21l4.5 2.6M7.5 19.79V14.6L3 12M16.5 4.21V9.4L21 12M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+        <div className="border-t"></div>
+        <button onClick={() => map.current?.zoomOut()} className="p-2 hover:bg-gray-100 rounded-b-lg flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 12h14" />
           </svg>
         </button>
       </div>
 
-      <div ref={mapContainer} className="h-full w-full" />
-
-      {loading && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg flex items-center shadow-xl">
-            <svg className="animate-spin h-5 w-5 mr-3 text-blue-600" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-            </svg>
-            <span className="text-gray-700">Recherche des propriétés...</span>
-          </div>
-        </div>
-      )}
+      <button
+        onClick={() => map.current?.setStyle('mapbox://styles/saber5180/cm9737hvv00en01qzefcd57b7')}
+        className="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 flex items-center justify-center"
+        title="Changer le style de la carte"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <path d="M7.5 4.21l4.5 2.6M7.5 19.79V14.6L3 12M16.5 4.21V9.4L21 12M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
+        </svg>
+      </button>
     </div>
-  );
+
+    {/* Map Container */}
+    <div ref={mapContainer} className="h-full w-full pb-2" />
+  </div>
+);
+
 
 };
 
