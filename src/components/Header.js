@@ -77,11 +77,11 @@ const Header = () => {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          <img 
-            src={logo} 
-            alt="ImmoXpert" 
-            className="h-8 md:h-10 w-auto cursor-pointer" 
-            onClick={() => navigate("/")} 
+          <img
+            src={logo}
+            alt="ImmoXpert"
+            className="h-8 md:h-10 w-auto cursor-pointer"
+            onClick={() => navigate("/")}
           />
         </div>
 
@@ -93,9 +93,8 @@ const Header = () => {
               <div key={index} className="relative">
                 <Link
                   to={item.path}
-                  className={`text-gray-700 hover:text-primary transition ${
-                    location.pathname === item.path ? "font-bold text-black" : ""
-                  }`}
+                  className={`text-gray-700 hover:text-primary transition ${location.pathname === item.path ? "font-bold text-black" : ""
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -109,9 +108,8 @@ const Header = () => {
             <div className="relative" ref={listboxRef}>
               <button
                 onClick={toggleListbox}
-                className={`text-gray-700 hover:text-primary transition flex items-center space-x-1 ${
-                  isPageActive ? "font-bold text-black" : ""
-                }`}
+                className={`text-gray-700 hover:text-primary transition flex items-center space-x-1 ${isPageActive ? "font-bold text-black" : ""
+                  }`}
                 aria-haspopup="listbox"
                 aria-expanded={isListboxOpen}
               >
@@ -138,9 +136,8 @@ const Header = () => {
                       role="option"
                       aria-selected={selectedPage?.name === page.name}
                       onClick={() => selectPage(page)}
-                      className={`px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${
-                        selectedPage?.name === page.name ? "bg-gray-50 font-medium" : ""
-                      }`}
+                      className={`px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${selectedPage?.name === page.name ? "bg-gray-50 font-medium" : ""
+                        }`}
                     >
                       {page.name}
                     </li>
@@ -155,6 +152,10 @@ const Header = () => {
             <button
               className="text-white px-4 py-2 rounded-lg transition hover:opacity-90"
               style={{ background: "#7069F9" }}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate("/login");
+                }}
             >
               Se connecter
             </button>
@@ -204,9 +205,8 @@ const Header = () => {
               <Link
                 key={index}
                 to={item.path}
-                className={`py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition ${
-                  location.pathname === item.path ? "font-bold text-black bg-gray-50" : ""
-                }`}
+                className={`py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition ${location.pathname === item.path ? "font-bold text-black bg-gray-50" : ""
+                  }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.name}
@@ -217,16 +217,15 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={toggleListbox}
-                className={`flex items-center justify-between w-full py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition ${
-                  isPageActive ? "font-bold text-black bg-gray-50" : ""
-                }`}
+                className={`flex items-center justify-between w-full py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition ${isPageActive ? "font-bold text-black bg-gray-50" : ""
+                  }`}
                 aria-haspopup="listbox"
                 aria-expanded={isListboxOpen}
               >
                 <span>Pages</span>
-                <FiChevronDown 
-                  className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`} 
-                  size={16} 
+                <FiChevronDown
+                  className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`}
+                  size={16}
                 />
               </button>
 
@@ -239,9 +238,8 @@ const Header = () => {
                         selectPage(page);
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`py-2 px-2 cursor-pointer hover:bg-gray-50 rounded-md transition ${
-                        selectedPage?.name === page.name ? 'font-medium bg-gray-50' : ''
-                      }`}
+                      className={`py-2 px-2 cursor-pointer hover:bg-gray-50 rounded-md transition ${selectedPage?.name === page.name ? 'font-medium bg-gray-50' : ''
+                        }`}
                     >
                       {page.name}
                     </div>
@@ -255,7 +253,10 @@ const Header = () => {
               <button
                 className="w-full text-white px-4 py-3 rounded-lg transition hover:opacity-90"
                 style={{ background: "#7069F9" }}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate("/login");
+                }}
               >
                 Se connecter
               </button>

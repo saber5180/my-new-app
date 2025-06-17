@@ -14,6 +14,7 @@ import Main5 from './components/ComponedNonLiee/Main5';
 import Estimation from './components/ComponedNonLiee/Estimation';
 import EstimationRechercher from './components/ComponedNonLiee/EstimationRechercher';
 import PrixEstime from './components/ComponedNonLiee/PrixEstime';
+import Login from './Page/Login';
 
 const AppContent = ({ searchParams, setSearchParams }) => {
   const location = useLocation();
@@ -49,6 +50,7 @@ const AppContent = ({ searchParams, setSearchParams }) => {
           <Route path="/Main5" element={<Main5 />} />
           <Route path="/estimation" element={<Estimation />} />
           <Route path="/EstimationRechercher" element={<EstimationRechercher />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/PrixEstime" element={<PrixEstime />} />
           <Route path="/" element={<Home />} />
         </Routes>
