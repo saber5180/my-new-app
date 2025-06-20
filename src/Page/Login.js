@@ -1,14 +1,47 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginStart, loginSuccess, loginFailure } from '../features/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.auth);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(loginStart());
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/login', {
+        email,
+        password,
+      });
+      const { token, user } = response.data;
+      console.log('Login response:', { token, user }); // Debug log
+
+      // Save token to localStorage
+      localStorage.setItem('jwt', token);
+      console.log('Token saved to localStorage:', localStorage.getItem('jwt')); // Verify storage
+
+      // Dispatch to Redux
+      dispatch(loginSuccess({ user, token }));
+      console.log('Token dispatched to Redux'); // Verify Redux update
+
+      // Navigate to agence page
+      navigate('/agence');
+    } catch (err) {
+      dispatch(loginFailure(err.response?.data?.message || 'Erreur de connexion'));
+    }
   };
 
   return (
@@ -48,7 +81,7 @@ function Login() {
           </div>
 
           {/* Login Form */}
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -98,9 +131,14 @@ function Login() {
             <button
               type="submit"
               className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95"
+              disabled={loading}
             >
-              Se connecter
+              {loading ? 'Connexion...' : 'Se connecter'}
             </button>
+
+            {error && (
+              <div className="text-red-500 text-center mt-2">{error}</div>
+            )}
 
             {/* Forgot password */}
             <div className="text-center">
