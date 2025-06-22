@@ -1,6 +1,20 @@
 import React from 'react';
 
 const AgentList = ({ agents, onEdit, onDelete, onAdd }) => {
+  const API_BASE_URL = 'http://localhost:8080';
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) {
+      return 'https://via.placeholder.com/50'; // Placeholder
+    }
+    if (imagePath.startsWith('http')) {
+      return imagePath; // It's already a full URL
+    }
+    // The correct public path exposed by the backend is /images/
+    const imageDir = 'images'; 
+    return `${API_BASE_URL}/${imageDir}/${imagePath}`;
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
@@ -22,7 +36,7 @@ const AgentList = ({ agents, onEdit, onDelete, onAdd }) => {
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 <img
-                  src={agent.image || 'https://via.placeholder.com/50'}
+                  src={getImageUrl(agent.image)}
                   alt={`${agent.prenom} ${agent.nom}`}
                   className="w-12 h-12 rounded-full object-cover"
                 />

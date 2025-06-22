@@ -15,7 +15,13 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent, onEdit, onDelete })
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-lg overflow-hidden">
-              {agent.image ? (
+              {agent.imageUrl ? (
+                <img 
+                  src={agent.imageUrl} 
+                  alt={`${agent.prenom} ${agent.nom}`}
+                  className="w-full h-full object-cover"
+                />
+              ) : agent.image ? (
                 <img 
                   src={agent.image} 
                   alt={`${agent.prenom} ${agent.nom}`}

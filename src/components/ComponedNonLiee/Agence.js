@@ -98,15 +98,30 @@ function Agence() {
     fetchData();
   }, [token, navigate]);
 
-  const handleUpdateAgency = async (formData) => {
+  const handleUpdateAgency = async (formData, imageFile) => {
     try {
+      const data = new FormData();
+      // Append all form fields to FormData
+      Object.keys(formData).forEach(key => {
+        // Exclude old image path from being sent if a new file is uploaded
+        if (key === 'image' && imageFile) return; 
+        if (formData[key] !== null) {
+            data.append(key, formData[key]);
+        }
+      });
+      
+      if (imageFile) {
+        data.append('image', imageFile);
+      }
+
       const response = await axios.put(
-        `http://localhost:8080/api/agencies/${agency.id}`,
-        formData,
+        `http://localhost:8080/api/agences/${agency.id}`,
+        data,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
         }
       );
       setAgency(response.data);
@@ -116,16 +131,25 @@ function Agence() {
     }
   };
 
-  const handleAddAgent = async (formData) => {
+  const handleAddAgent = async (formData, imageFile) => {
     try {
+      const data = new FormData();
+      data.append('nom', formData.nom);
+      data.append('prenom', formData.prenom);
+      data.append('tel', formData.tel);
+      data.append('email', formData.email);
+      if (imageFile) {
+        data.append('image', imageFile);
+      }
+      
       const tokenToUse = token || localStorage.getItem('jwt');
-      console.log('Token used for add agent:', tokenToUse);
       const response = await axios.post(
         'http://localhost:8080/api/agents',
-        formData,
+        data,
         {
           headers: {
-            Authorization: `Bearer ${tokenToUse}`
+            Authorization: `Bearer ${tokenToUse}`,
+            'Content-Type': 'multipart/form-data'
           }
         }
       );
@@ -137,15 +161,25 @@ function Agence() {
     }
   };
 
-  const handleEditAgent = async (formData) => {
+  const handleEditAgent = async (formData, imageFile) => {
     if (editingAgent) {
       try {
+        const data = new FormData();
+        data.append('nom', formData.nom);
+        data.append('prenom', formData.prenom);
+        data.append('tel', formData.tel);
+        data.append('email', formData.email);
+        if (imageFile) {
+          data.append('image', imageFile);
+        }
+
         const response = await axios.put(
           `http://localhost:8080/api/agents/${editingAgent.id}`,
-          formData,
+          data,
           {
             headers: {
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
             }
           }
         );

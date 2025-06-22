@@ -71,6 +71,13 @@ const Header = () => {
   // Check if the current page is in page options
   const isPageActive = pageOptions.some(page => page.path === location.pathname);
 
+  const isLoggedIn = Boolean(localStorage.getItem('jwt'));
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    navigate('/login');
+  };
+
   return (
     <header className="w-full bg-white shadow-sm border-b border-gray-200" style={{ background: "#F9FAFB" }}>
       {/* Top Header Section */}
@@ -150,14 +157,18 @@ const Header = () => {
           {/* Desktop Buttons */}
           <div className="flex items-center space-x-4">
             <button
-              className="text-white px-4 py-2 rounded-lg transition hover:opacity-90"
-              style={{ background: "#7069F9" }}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  navigate("/login");
-                }}
+              className={`${isLoggedIn ? 'bg-gray-400' : 'text-white'} px-4 py-2 rounded-lg transition hover:opacity-90`}
+              style={{ background: isLoggedIn ? '#a3a3a3' : '#7069F9' }}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                if (isLoggedIn) {
+                  handleLogout();
+                } else {
+                  navigate('/login');
+                }
+              }}
             >
-              Se connecter
+              {isLoggedIn ? 'Déconnexion' : 'Se connecter'}
             </button>
             <h1 className="text-sm font-bold border-2 p-2 px-4 rounded-xl" style={{ borderColor: "#7069F9" }}>
               <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
@@ -251,14 +262,18 @@ const Header = () => {
             {/* Mobile Connect Button */}
             <div className="pt-4 mt-4 border-t border-gray-100">
               <button
-                className="w-full text-white px-4 py-3 rounded-lg transition hover:opacity-90"
-                style={{ background: "#7069F9" }}
+                className={`w-full ${isLoggedIn ? 'bg-gray-400' : 'text-white'} px-4 py-3 rounded-lg transition hover:opacity-90`}
+                style={{ background: isLoggedIn ? '#a3a3a3' : '#7069F9' }}
                 onClick={() => {
                   setIsMobileMenuOpen(false);
-                  navigate("/login");
+                  if (isLoggedIn) {
+                    handleLogout();
+                  } else {
+                    navigate('/login');
+                  }
                 }}
               >
-                Se connecter
+                {isLoggedIn ? 'Déconnexion' : 'Se connecter'}
               </button>
             </div>
           </nav>

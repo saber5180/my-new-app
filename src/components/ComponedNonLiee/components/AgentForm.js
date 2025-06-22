@@ -6,8 +6,9 @@ const AgentForm = ({ isOpen, onClose, onSubmit, agent, title }) => {
     prenom: '',
     email: '',
     tel: '',
-    image: ''
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
     if (agent) {
@@ -16,16 +17,18 @@ const AgentForm = ({ isOpen, onClose, onSubmit, agent, title }) => {
         prenom: agent.prenom || '',
         email: agent.email || '',
         tel: agent.tel || '',
-        image: agent.image || ''
       });
+      setImagePreview(agent.imageUrl || agent.image || '');
+      setImageFile(null); 
     } else {
       setFormData({
         nom: '',
         prenom: '',
         email: '',
         tel: '',
-        image: ''
       });
+      setImagePreview('');
+      setImageFile(null);
     }
   }, [agent]);
 
@@ -37,9 +40,17 @@ const AgentForm = ({ isOpen, onClose, onSubmit, agent, title }) => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData, imageFile); 
     onClose();
   };
 
@@ -125,15 +136,21 @@ const AgentForm = ({ isOpen, onClose, onSubmit, agent, title }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              URL de l'image
+              Photo de l'agent
             </label>
             <input
-              type="text"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Aperçu"
+                className="mt-2 w-24 h-24 object-cover rounded-full border"
+              />
+            )}
           </div>
           <div className="flex space-x-4">
             <button
