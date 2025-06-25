@@ -58,7 +58,7 @@ function Agence() {
           console.error('Error decoding token:', decodeError);
         }
 
-        // Fetch agency info using email from decoded token
+        let currentAgencyId = null;
         if (decodedToken && decodedToken.sub) {
           try {
             const agencyResponse = await axios.get(
@@ -70,19 +70,25 @@ function Agence() {
               }
             );
             setAgency(agencyResponse.data);
+            currentAgencyId = agencyResponse.data.id;
+            if (agencyResponse.data.email) {
+              try {
+                const agentsRes = await axios.get(`http://localhost:8080/api/agents/agence/email/${agencyResponse.data.email}`, {
+                  headers: {
+                    Authorization: `Bearer ${tokenToUse}`
+                  }
+                });
+                setAgents(agentsRes.data);
+              } catch (err) {
+                setAgents([]);
+              }
+            }
           } catch (agencyError) {
             console.error('Error fetching agency:', agencyError);
             setError("Erreur lors de la récupération des informations de l'agence");
             return;
           }
         }
-
-        const response = await axios.get('http://localhost:8080/api/agents', {
-          headers: {
-            Authorization: `Bearer ${tokenToUse}`
-          }
-        });
-        setAgents(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);

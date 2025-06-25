@@ -9,12 +9,13 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isListboxOpen, setIsListboxOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const listboxRef = useRef(null);
   const navigate = useNavigate();
 
   const navItems = [
     { name: "Accueil", path: "/" },
-    { name: "Acheter", path: "#" },
+    { name: "Acheter", path: "/achat" },
     { name: "Louer", path: "/louer" },
     { name: "Estimation", path: "/estimation" },
     { name: "Investisseurs", path: "/investisseurs" },
@@ -25,6 +26,15 @@ const Header = () => {
   const pageOptions = [
     { name: "Prix&Contacte", path: "/Main5" },
   ];
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -79,207 +89,278 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full bg-white shadow-sm border-b border-gray-200" style={{ background: "#F9FAFB" }}>
-      {/* Top Header Section */}
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo */}
-        <div className="flex items-center">
-          <img
-            src={logo}
-            alt="ImmoXpert"
-            className="h-8 md:h-10 w-auto cursor-pointer"
-            onClick={() => navigate("/")}
-          />
-        </div>
+    <>
+      <header 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-gray-200/50' 
+            : 'bg-white/90 backdrop-blur-sm shadow-sm border-b border-gray-100'
+        }`}
+      >
+        {/* Top Header Section */}
+        <div className="container mx-auto px-4 lg:px-6 py-4">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
+            <div className="flex items-center group">
+              <img
+                src={logo}
+                alt="ImmoXpert"
+                className="h-8 md:h-10 w-auto cursor-pointer transform transition-transform duration-200 group-hover:scale-105"
+                onClick={() => navigate("/")}
+              />
+            </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center w-full px-6">
-          {/* Navigation centered */}
-          <div className="flex-1 flex justify-center space-x-6 items-center">
-            {navItems.map((item, index) => (
-              <div key={index} className="relative">
-                <Link
-                  to={item.path}
-                  className={`text-gray-700 hover:text-primary transition ${location.pathname === item.path ? "font-bold text-black" : ""
-                    }`}
-                >
-                  {item.name}
-                </Link>
-                {location.pathname === item.path && (
-                  <div className="absolute left-0 right-0 -bottom-px h-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-yellow-300" />
-                )}
-              </div>
-            ))}
-
-            {/* Pages dropdown */}
-            <div className="relative" ref={listboxRef}>
-              <button
-                onClick={toggleListbox}
-                className={`text-gray-700 hover:text-primary transition flex items-center space-x-1 ${isPageActive ? "font-bold text-black" : ""
-                  }`}
-                aria-haspopup="listbox"
-                aria-expanded={isListboxOpen}
-              >
-                <span>Pages</span>
-                <FiChevronDown
-                  className={`transition-transform ${isListboxOpen ? "rotate-180" : ""}`}
-                  size={16}
-                />
-              </button>
-
-              {isPageActive && (
-                <div className="absolute left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-purple-500 to-yellow-300" />
-              )}
-
-              {isListboxOpen && (
-                <ul
-                  className="absolute mt-1 w-40 bg-white shadow-lg rounded-lg py-1 z-50 border border-gray-200"
-                  role="listbox"
-                  aria-label="page"
-                >
-                  {pageOptions.map((page) => (
-                    <li
-                      key={page.name}
-                      role="option"
-                      aria-selected={selectedPage?.name === page.name}
-                      onClick={() => selectPage(page)}
-                      className={`px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${selectedPage?.name === page.name ? "bg-gray-50 font-medium" : ""
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center w-full px-8">
+              {/* Navigation centered */}
+              <div className="flex-1 flex justify-center items-center">
+                <nav className="flex items-center space-x-8">
+                  {navItems.map((item, index) => (
+                    <div key={index} className="relative group">
+                      <Link
+                        to={item.path}
+                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 hover:text-transparent hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text ${
+                          location.pathname === item.path 
+                            ? "text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-semibold" 
+                            : "text-gray-700"
                         }`}
-                    >
-                      {page.name}
-                    </li>
+                      >
+                        {item.name}
+                        {/* Active indicator */}
+                        {location.pathname === item.path && (
+                          <div className="absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-pulse" />
+                        )}
+                        {/* Hover indicator */}
+                        <div className="absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                      </Link>
+                    </div>
                   ))}
-                </ul>
-              )}
+
+                  {/* Pages dropdown */}
+                  <div className="relative group" ref={listboxRef}>
+                    <button
+                      onClick={toggleListbox}
+                      className={`relative px-3 py-2 text-sm font-medium flex items-center space-x-1 transition-all duration-300 hover:text-transparent hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:bg-clip-text ${
+                        isPageActive 
+                          ? "text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-semibold" 
+                          : "text-gray-700"
+                      }`}
+                      aria-haspopup="listbox"
+                      aria-expanded={isListboxOpen}
+                    >
+                      <span>Pages</span>
+                      <FiChevronDown
+                        className={`transition-all duration-300 ${
+                          isListboxOpen ? "rotate-180 text-purple-600" : "group-hover:text-purple-600"
+                        }`}
+                        size={16}
+                      />
+                      {/* Active indicator */}
+                      {isPageActive && (
+                        <div className="absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-pulse" />
+                      )}
+                      {/* Hover indicator */}
+                      <div className="absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {isListboxOpen && (
+                      <div className="absolute top-full left-0 mt-2 w-48 bg-white/95 backdrop-blur-lg shadow-xl rounded-2xl border border-gray-200/50 overflow-hidden transform transition-all duration-200 animate-in slide-in-from-top-2">
+                        <div className="py-2">
+                          {pageOptions.map((page) => (
+                            <button
+                              key={page.name}
+                              onClick={() => selectPage(page)}
+                              className={`w-full text-left px-4 py-3 text-sm transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-purple-700 ${
+                                selectedPage?.name === page.name 
+                                  ? "bg-gradient-to-r from-blue-50 to-purple-50 text-purple-700 font-medium" 
+                                  : "text-gray-700"
+                              }`}
+                            >
+                              {page.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </nav>
+              </div>
+
+              {/* Desktop Buttons */}
+              <div className="flex items-center space-x-6">
+                <button
+                  className={`relative px-6 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
+                    isLoggedIn 
+                      ? 'text-white bg-gray-500 hover:bg-gray-600' 
+                      : 'text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg'
+                  }`}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    if (isLoggedIn) {
+                      handleLogout();
+                    } else {
+                      navigate('/login');
+                    }
+                  }}
+                >
+                  {!isLoggedIn && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
+                  )}
+                  <span className="relative">{isLoggedIn ? 'Déconnexion' : 'Se connecter'}</span>
+                </button>
+                
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
+                  <div className="relative text-sm font-bold border-2 border-transparent bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-border p-3 px-6 rounded-2xl backdrop-blur">
+                    <div className="absolute inset-0 bg-white rounded-2xl" />
+                    <div className="relative flex items-center space-x-1">
+                      <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
+                        Pack
+                      </span>
+                      <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent font-bold">
+                        Pro
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <div className="lg:hidden flex items-center space-x-4">
+              {/* Mobile Pack Pro Badge */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl blur opacity-25" />
+                <div className="relative text-xs font-bold border border-purple-200 bg-white/90 backdrop-blur px-3 py-1.5 rounded-xl">
+                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Pack
+                  </span>{" "}
+                  <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                    Pro
+                  </span>
+                </div>
+              </div>
+              
+              <button
+                onClick={toggleMobileMenu}
+                className="relative p-2 text-gray-700 hover:text-purple-600 transition-colors duration-200 group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                <div className="relative">
+                  {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                </div>
+              </button>
             </div>
           </div>
-
-          {/* Desktop Buttons */}
-          <div className="flex items-center space-x-4">
-            <button
-              className={`${isLoggedIn ? 'bg-gray-400' : 'text-white'} px-4 py-2 rounded-lg transition hover:opacity-90`}
-              style={{ background: isLoggedIn ? '#a3a3a3' : '#7069F9' }}
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                if (isLoggedIn) {
-                  handleLogout();
-                } else {
-                  navigate('/login');
-                }
-              }}
-            >
-              {isLoggedIn ? 'Déconnexion' : 'Se connecter'}
-            </button>
-            <h1 className="text-sm font-bold border-2 p-2 px-4 rounded-xl" style={{ borderColor: "#7069F9" }}>
-              <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                Pack
-              </span>{" "}
-              <span className="bg-gradient-to-r from-purple-500 to-orange-300 bg-clip-text text-transparent">
-                Pro
-              </span>
-            </h1>
-          </div>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="md:hidden flex items-center space-x-3">
-          {/* Mobile Pack Pro Badge */}
-          <div className="text-xs font-bold border-2 px-2 py-1 rounded-lg" style={{ borderColor: "#7069F9" }}>
-            <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-              Pack
-            </span>{" "}
-            <span className="bg-gradient-to-r from-purple-500 to-orange-300 bg-clip-text text-transparent">
-              Pro
-            </span>
-          </div>
-          <button
-            onClick={toggleMobileMenu}
-            className="text-gray-700 focus:outline-none p-1"
-          >
-            {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-          </button>
+        {/* Animated Gradient Line */}
+        <div className="relative h-1 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-pulse" />
         </div>
-      </div>
-
-      {/* Gradient Line */}
-      <div
-        className="absolute left-6 right-6 h-[3px] bg-gradient-to-r from-blue-500 via-purple-500 to-yellow-300"
-        style={{ maskImage: "linear-gradient(to right, white 60%, white 40%)" }}
-      />
+      </header>
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-gray-100" style={{ zIndex: 40 }}>
-          <nav className="flex flex-col p-4 space-y-1">
-            {/* Navigation Items */}
-            {navItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className={`py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition ${location.pathname === item.path ? "font-bold text-black bg-gray-50" : ""
-                  }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
+        <div className="fixed inset-0 z-40 lg:hidden">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Menu Panel */}
+          <div className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-lg shadow-2xl border-b border-gray-200/50 animate-in slide-in-from-top duration-300">
+            <div className="pt-20 pb-6">
+              <nav className="px-6 space-y-2">
+                {/* Navigation Items */}
+                {navItems.map((item, index) => (
+                  <Link
+                    key={index}
+                    to={item.path}
+                    className={`block py-4 px-4 rounded-xl text-base font-medium transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-purple-700 ${
+                      location.pathname === item.path 
+                        ? "bg-gradient-to-r from-blue-50 to-purple-50 text-purple-700 font-semibold" 
+                        : "text-gray-700"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
 
-            {/* Mobile Pages Dropdown */}
-            <div className="relative">
-              <button
-                onClick={toggleListbox}
-                className={`flex items-center justify-between w-full py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition ${isPageActive ? "font-bold text-black bg-gray-50" : ""
-                  }`}
-                aria-haspopup="listbox"
-                aria-expanded={isListboxOpen}
-              >
-                <span>Pages</span>
-                <FiChevronDown
-                  className={`transition-transform ${isListboxOpen ? 'rotate-180' : ''}`}
-                  size={16}
-                />
-              </button>
+                {/* Mobile Pages Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={toggleListbox}
+                    className={`flex items-center justify-between w-full py-4 px-4 rounded-xl text-base font-medium transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-purple-700 ${
+                      isPageActive 
+                        ? "bg-gradient-to-r from-blue-50 to-purple-50 text-purple-700 font-semibold" 
+                        : "text-gray-700"
+                    }`}
+                    aria-haspopup="listbox"
+                    aria-expanded={isListboxOpen}
+                  >
+                    <span>Pages</span>
+                    <FiChevronDown
+                      className={`transition-transform duration-300 ${isListboxOpen ? 'rotate-180' : ''}`}
+                      size={18}
+                    />
+                  </button>
 
-              {isListboxOpen && (
-                <div className="mt-1 ml-4 space-y-1">
-                  {pageOptions.map((page) => (
-                    <div
-                      key={page.name}
-                      onClick={() => {
-                        selectPage(page);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className={`py-2 px-2 cursor-pointer hover:bg-gray-50 rounded-md transition ${selectedPage?.name === page.name ? 'font-medium bg-gray-50' : ''
-                        }`}
-                    >
-                      {page.name}
+                  {isListboxOpen && (
+                    <div className="mt-2 ml-6 space-y-1 animate-in slide-in-from-top-2 duration-200">
+                      {pageOptions.map((page) => (
+                        <button
+                          key={page.name}
+                          onClick={() => {
+                            selectPage(page);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className={`block w-full text-left py-3 px-4 rounded-lg text-sm transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-purple-600 ${
+                            selectedPage?.name === page.name 
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-purple-600 font-medium' 
+                              : 'text-gray-600'
+                          }`}
+                        >
+                          {page.name}
+                        </button>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Mobile Connect Button */}
-            <div className="pt-4 mt-4 border-t border-gray-100">
-              <button
-                className={`w-full ${isLoggedIn ? 'bg-gray-400' : 'text-white'} px-4 py-3 rounded-lg transition hover:opacity-90`}
-                style={{ background: isLoggedIn ? '#a3a3a3' : '#7069F9' }}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  if (isLoggedIn) {
-                    handleLogout();
-                  } else {
-                    navigate('/login');
-                  }
-                }}
-              >
-                {isLoggedIn ? 'Déconnexion' : 'Se connecter'}
-              </button>
+                {/* Mobile Connect Button */}
+                <div className="pt-6 mt-6 border-t border-gray-200">
+                  <button
+                    className={`w-full py-4 px-6 rounded-xl font-medium text-base transition-all duration-300 transform hover:scale-105 ${
+                      isLoggedIn 
+                        ? 'text-white bg-gray-500 hover:bg-gray-600' 
+                        : 'text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg'
+                    }`}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      if (isLoggedIn) {
+                        handleLogout();
+                      } else {
+                        navigate('/login');
+                      }
+                    }}
+                  >
+                    {isLoggedIn ? 'Déconnexion' : 'Se connecter'}
+                  </button>
+                </div>
+              </nav>
             </div>
-          </nav>
+          </div>
         </div>
       )}
-    </header>
+      
+      {/* Spacer to prevent content from hiding behind fixed header */}
+      <div className="h-20" />
+    </>
   );
 };
 

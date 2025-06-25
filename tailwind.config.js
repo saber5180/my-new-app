@@ -17,8 +17,9 @@ module.exports = {
         fontFamily: {
           maven: ['Maven Pro', 'sans-serif'],
         },
-
-
+        colors: {
+          brand: '#7069F9',
+        },
       },
     },
     plugins: [ require('tailwind-scrollbar')],

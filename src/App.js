@@ -6,10 +6,13 @@ import PropertyList from './Page/PropertyList';
 import Footer from './components/Footer';
 import { properties } from './data/properties';
 import LouerPage from './Page/Louer';
+import Acheter from './Page/Acheter';
+import Favoris from './Page/Favoris';
 import Home from './Page/Home';
 import TrouveAgent from './Page/TrouveAgent';
 import VoirLagence from './Page/VoirLagence';
 import RecherchLouer from './components/ComponedNonLiee/RecherchLouer';
+import RecherchAcheter from './components/ComponedNonLiee/RecherchAcheter';
 import Main5 from './components/ComponedNonLiee/Main5';
 import Estimation from './components/ComponedNonLiee/Estimation';
 import EstimationRechercher from './components/ComponedNonLiee/EstimationRechercher';
@@ -45,10 +48,12 @@ const AppContent = ({ searchParams, setSearchParams }) => {
               </div>
             }
           />
+          <Route path="/achat" element={<Acheter />} />
           <Route path="/louer" element={<LouerPage />} />
           <Route path="/TrouverAgent" element={<TrouveAgent />} />
           <Route path="/VoirLagence" element={<VoirLagence />} />
           <Route path="/RecherchLouer" element={<RecherchLouer />} />
+          <Route path="/RecherchAcheter" element={<RecherchAcheter />} />
           <Route path="/Main5" element={<Main5 />} />
           <Route path="/estimation" element={<Estimation />} />
           <Route path="/EstimationRechercher" element={<EstimationRechercher />} />
@@ -56,6 +61,7 @@ const AppContent = ({ searchParams, setSearchParams }) => {
           <Route path="/PrixEstime" element={<PrixEstime />} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/favoris" element={<Favoris />} />
         </Routes>
       </main>
       

@@ -5,11 +5,11 @@ import leboncoin from '../../assets/leboncoin-e1561735918709.png';
 import avendrealouer from '../../assets/figaroimmo.webp';
 import figaroimmo from '../../assets/353-3535371_seloger-pv-logicimmo-avendrealouer-leboncoin-bienici-bien-ici-removebg-preview.png';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProperties } from '../../features/propertySearchSlice';
+import { fetchBuyProperties } from '../../features/propertyBuySlice';
 import { toggleFavorite } from '../../features/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 
-const RecherchLouer = () => {
+const RecherchAcheter = () => {
   const associationLogos = {
     'leboncoin': leboncoin,
     'avendrealouer': avendrealouer,
@@ -20,12 +20,12 @@ const RecherchLouer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const dispatch = useDispatch();
-  const { searchParams, properties, loading, error } = useSelector(state => state.propertySearch);
+  const { searchParams, properties, loading, error } = useSelector(state => state.propertyBuy);
   const { favorites } = useSelector(state => state.favorites);
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchProperties(searchParams));
+    dispatch(fetchBuyProperties(searchParams));
   }, [dispatch, searchParams]);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const RecherchLouer = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-  
+
   const handleToggleFavorite = (propertyId) => {
     dispatch(toggleFavorite(propertyId));
   };
@@ -204,9 +204,9 @@ const RecherchLouer = () => {
       </motion.div>
     );
   };
-  
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100 pb-20">
       {/* Header */}
       <header className="mt-10 rounded-2xl">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -369,23 +369,23 @@ const RecherchLouer = () => {
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">
-            Résultats de location
+          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-700 via-purple-600 to-blue-400 bg-clip-text text-transparent mb-2">
+            Résultats d'achat
           </h1>
-          <div className="h-1 w-32 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full mb-4 animate-pulse" />
+          <div className="h-1 w-32 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-400 rounded-full mb-4 animate-pulse" />
         </div>
         {/* Results count and items per page */}
         {!loading && properties.length > 0 && (
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <p className="text-gray-600 text-base">
-              Affichage de <span className="font-semibold text-indigo-600">{startIndex + 1}</span> à <span className="font-semibold text-indigo-600">{Math.min(endIndex, properties.length)}</span> sur <span className="font-semibold text-indigo-600">{properties.length}</span> propriétés
+              Affichage de <span className="font-semibold text-blue-600">{startIndex + 1}</span> à <span className="font-semibold text-blue-600">{Math.min(endIndex, properties.length)}</span> sur <span className="font-semibold text-blue-600">{properties.length}</span> propriétés
             </p>
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-600">Par page:</span>
               <select
                 value={itemsPerPage}
                 onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-                className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white/80 shadow"
+                className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 shadow"
               >
                 <option value={6}>6</option>
                 <option value={9}>9</option>
@@ -397,7 +397,7 @@ const RecherchLouer = () => {
         )}
         {/* Loading/Error/Empty States */}
         {loading && (
-          <div className="text-center text-indigo-600 font-semibold mb-4">Chargement des propriétés...</div>
+          <div className="text-center text-blue-600 font-semibold mb-4">Chargement des propriétés...</div>
         )}
         {error && (
           <div className="text-center text-red-500 font-semibold mb-4">{error}</div>
@@ -429,7 +429,7 @@ const RecherchLouer = () => {
                 transition={{ duration: 0.3, delay: 0.3 }}
               >
                 <motion.h2 
-                  className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent"
+                  className="text-2xl font-bold bg-gradient-to-r from-blue-700 via-purple-600 to-blue-400 bg-clip-text text-transparent"
                   whileHover={{ scale: 1.05 }}
                 >
                   {property.priceText || `${property.price} €`}
@@ -509,7 +509,7 @@ const RecherchLouer = () => {
                 className={`p-2 rounded-md shadow-md font-semibold transition-all duration-200 ${
                   currentPage === 1 
                     ? 'text-gray-300 bg-gray-100 cursor-not-allowed' 
-                    : 'text-indigo-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
+                    : 'text-blue-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
                 }`}
                 whileHover={currentPage !== 1 ? { scale: 1.08 } : {}}
                 whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
@@ -523,7 +523,7 @@ const RecherchLouer = () => {
                 className={`p-2 rounded-md shadow-md font-semibold transition-all duration-200 ${
                   currentPage === 1 
                     ? 'text-gray-300 bg-gray-100 cursor-not-allowed' 
-                    : 'text-indigo-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
+                    : 'text-blue-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
                 }`}
                 whileHover={currentPage !== 1 ? { scale: 1.08 } : {}}
                 whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
@@ -542,7 +542,7 @@ const RecherchLouer = () => {
                         className={`px-3 py-2 rounded-lg font-semibold text-sm shadow-md transition-all duration-200 ${
                           currentPage === page
                             ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white scale-105 shadow-lg'
-                            : 'text-indigo-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
+                            : 'text-blue-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
                         }`}
                         whileHover={{ scale: 1.12 }}
                         whileTap={{ scale: 0.95 }}
@@ -560,7 +560,7 @@ const RecherchLouer = () => {
                 className={`p-2 rounded-md shadow-md font-semibold transition-all duration-200 ${
                   currentPage === totalPages 
                     ? 'text-gray-300 bg-gray-100 cursor-not-allowed' 
-                    : 'text-indigo-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
+                    : 'text-blue-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
                 }`}
                 whileHover={currentPage !== totalPages ? { scale: 1.08 } : {}}
                 whileTap={currentPage !== totalPages ? { scale: 0.95 } : {}}
@@ -574,7 +574,7 @@ const RecherchLouer = () => {
                 className={`p-2 rounded-md shadow-md font-semibold transition-all duration-200 ${
                   currentPage === totalPages 
                     ? 'text-gray-300 bg-gray-100 cursor-not-allowed' 
-                    : 'text-indigo-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
+                    : 'text-blue-600 bg-gradient-to-r from-blue-100 to-purple-100 hover:bg-gradient-to-r hover:from-blue-200 hover:to-purple-200'
                 }`}
                 whileHover={currentPage !== totalPages ? { scale: 1.08 } : {}}
                 whileTap={currentPage !== totalPages ? { scale: 0.95 } : {}}
@@ -594,7 +594,7 @@ const RecherchLouer = () => {
       >
         <div className="flex justify-around">
           <motion.button 
-            className="flex flex-col items-center py-3 px-4 text-indigo-600"
+            className="flex flex-col items-center py-3 px-4 text-blue-600"
             whileTap={{ scale: 0.9 }}
             whileHover={{ y: -3 }}
             onClick={() => navigate('/')}
@@ -606,7 +606,7 @@ const RecherchLouer = () => {
             className="flex flex-col items-center py-3 px-4 text-purple-600"
             whileTap={{ scale: 0.9 }}
             whileHover={{ y: -3 }}
-            onClick={() => navigate('/louer')}
+            onClick={() => navigate('/acheter')}
           >
             <Search className="h-6 w-6" />
             <span className="text-xs mt-1">Recherche</span>
@@ -635,4 +635,4 @@ const RecherchLouer = () => {
   );
 };
 
-export default RecherchLouer;
+export default RecherchAcheter; 
